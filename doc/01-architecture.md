@@ -1,6 +1,6 @@
 # Application architecture
 
-Status: proposed technical baseline, to be confirmed by the first working slice.
+Status: first local slice implemented September 22, 2026 with TypeScript, Next.js, React, and SVG/CSS. Backend and provider choices below remain proposed.
 
 ## Goal
 

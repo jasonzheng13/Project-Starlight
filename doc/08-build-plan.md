@@ -1,6 +1,6 @@
 # Build plan
 
-Status: proposed sequence; all implementation work is currently not started.
+Status: first local constellation slice implemented September 22, 2026; visual review with the user is next. One year has three clickable photo memories, a viewer with loading/error/retry, and session-only illumination. SVG/CSS is the first rendering baseline. Private backend access, importing, durable progress, and the remaining chapters are not implemented.
 
 ## Work in complete slices
 

@@ -1,6 +1,6 @@
 # Decisions and open questions
 
-Updated September 17, 2026.
+Updated September 22, 2026.
 
 ## Confirmed by the user
 
@@ -49,5 +49,9 @@ These are implementation recommendations, not additional user commitments.
 For a meaningful change, add: date; question; choice; reason; downside accepted; affected specs; status. Keep it short. Change the owning spec as well so this log does not become a conflicting second source of requirements.
 
 ## Initial decision record
+
+September 22: implement the first constellation with original SVG artwork and layered CSS, inspired by the user's requested Genshin constellation-page atmosphere. Reason: the current authored scene needs precise glowing lines, selectable stars, and gentle depth without a 3D camera. Downside accepted: this does not provide true volumetric space or camera travel. Three.js has not been benchmarked against this implementation; revisit after visual review if actual depth is needed. Affected specs: architecture, constellation experience, build plan. Status: implemented baseline, visual approval pending.
+
+September 22: use the user's three supplied first-year pictures only in a loopback development preview. Originals and local configuration remain ignored by Git; a development-only allowlisted route serves them without shared caching. Production always refuses this endpoint. Reason: evaluate real photo proportions before building the private backend. Downside accepted: no hosted private access or persistent progress yet. Captions and constellation symbolism remain drafts. Affected specs: private access, content/media, build plan. Status: local implementation only.
 
 September 17: choose a constellation scrapbook rather than the earlier AI-directed memory game. Reason: the recipient's preferences and the developer's stated goals support easy discovery without puzzle confusion. Consequence: AI navigation, reconstruction, and quest systems no longer define anniversary completion. Backend depth comes from protected content, safe importing, persistence, deployment, and failure handling.
