@@ -1,6 +1,6 @@
 # Build plan
 
-Status: first local constellation slice implemented September 22, 2026; visual review with the user is next. One year has three clickable photo memories, a viewer with loading/error/retry, and session-only illumination. SVG/CSS is the first rendering baseline. Private backend access, importing, durable progress, and the remaining chapters are not implemented.
+Status: first local constellation slice implemented September 22, 2026. Following visual review on September 23, Three.js replaces the static scene with a teal Jean-inspired lion constellation. One year has three clickable photo memories, a viewer with loading/error/retry, and session-only illumination. Revised visual review is next. Private backend access, importing, durable progress, and the remaining chapters are not implemented.
 
 ## Work in complete slices
 

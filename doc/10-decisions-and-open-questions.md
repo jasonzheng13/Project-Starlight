@@ -1,6 +1,6 @@
 # Decisions and open questions
 
-Updated September 22, 2026.
+Updated September 24, 2026.
 
 ## Confirmed by the user
 
@@ -49,6 +49,20 @@ These are implementation recommendations, not additional user commitments.
 For a meaningful change, add: date; question; choice; reason; downside accepted; affected specs; status. Keep it short. Change the owning spec as well so this log does not become a conflicting second source of requirements.
 
 ## Initial decision record
+
+September 24 soundtrack and glow: Year I selects its own Mondstadt track through a fixed server allowlist. The supplied MP3 is currently under ignored `music/sfx/`; the overview has no soundtrack. Leaving Year I stops and resets music; memory dialogs keep it playing. Future constellations must provide their own track mapping. All six emblems now have a persistent cyan-teal rim with layered bloom, with stronger hover/focus/visited states, matching the supplied game reference more closely.
+
+September 24 icon replacement: replace original SVG emblems with Jean's six constellation PNG icons, sourced via Genshin.gg and checked against the user's reference. Preserve memory labels, ordering, and interaction behavior. Reason: the user explicitly requested the actual icon shapes. See [icon provenance](13-jean-icons.md). Supersedes the original-icon choice in the earlier menu refinement.
+
+September 24 audio pass: add a shared Web Audio controller and independent effects volume beneath Cat B. Use four locally downloaded effects from the official Dream of Roving Stars web event. Hover reuses a quieter button clip; these are not verified matches for the desktop constellation menu. Keep source files ignored and serve only through the development adapter. Reason: traceable small assets and one reusable playback boundary; missing audio must not break navigation. Downside accepted: exact game fidelity remains unverified, and fresh clones need the local files. See [UI audio](12-ui-audio.md) for provenance and mappings. Visual transitions remain deferred.
+
+September 24 menu refinement: user requested stronger fidelity to Genshin's right-side constellation UI. Compared an in-game Jean screenshot and implemented curved row offsets, distinct circular emblems, a subdued curved connector, bold cream titles, and glowing interaction states. Remove redundant row text and arrows. Preserve memory labels and accessible status announcements; no false lock state. Downside accepted: original icons and a substitute font approximate the game rather than reproduce its assets exactly. Status: visually checked at desktop/mobile sizes; all 14 browser checks and production build pass.
+
+September 24 follow-up: user selected Cat B and requested Mondstadt OST autoplay with volume control under the cat. Replace the comparison buttons with a music popover; handle blocked autoplay explicitly and retain a separate play/pause control. Audio is streamed locally from ignored `music/mondstadt.mp3`; no track is bundled. Downside accepted: browser policy may require a gesture, and actual soundtrack validation waits for the file. Status: controls implemented, audio source pending.
+
+September 24: all six Jean anchors open distinct memories per user request. Preserve existing IDs/positions; slots 4–6 await photos. Derive totals from the memory collection. Compare both supplied cat mascots as transparent generated cutouts using temporary A/B header controls. Final mascot selection is pending. Affected specs: constellation experience, content, mascot assets. Status: implemented for review.
+
+September 23: replace the SVG/CSS visual baseline with Three.js at the user's explicit request. Year I uses the supplied Jean lion constellation and teal-green palette as its reference, with animated nebulae, depth-layered particles, luminous flares, and restrained pointer parallax. Keep React's existing memory flow and project star positions into accessible HTML controls. Remove bottom decorative copy and use the supplied Jean quote. Downside accepted: greater bundle size and GPU/lifecycle complexity; performance needs real-device review. The linework is authored from the reference and remains open to visual refinement. Affected specs: architecture, constellation experience, build plan. Status: implemented for review; supersedes the September 22 SVG renderer choice.
 
 September 22: implement the first constellation with original SVG artwork and layered CSS, inspired by the user's requested Genshin constellation-page atmosphere. Reason: the current authored scene needs precise glowing lines, selectable stars, and gentle depth without a 3D camera. Downside accepted: this does not provide true volumetric space or camera travel. Three.js has not been benchmarked against this implementation; revisit after visual review if actual depth is needed. Affected specs: architecture, constellation experience, build plan. Status: implemented baseline, visual approval pending.
 

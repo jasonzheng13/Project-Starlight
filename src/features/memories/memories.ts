@@ -4,7 +4,7 @@ export type Memory = {
   title: string;
   note: string;
   alt: string;
-  position: { x: number; y: number };
+  awaitingPhoto?: boolean;
 };
 
 // Draft editorial text, not invented dates or personal recollections.
@@ -16,7 +16,6 @@ export const memories: readonly Memory[] = [
     title: "The first little spark",
     note: "A place for the story behind this photograph. What do you remember about this day? What small detail still makes you smile?",
     alt: "First photograph selected for our first year together",
-    position: { x: 31, y: 62 },
   },
   {
     id: "year-1-memory-2",
@@ -24,7 +23,6 @@ export const memories: readonly Memory[] = [
     title: "A moment, kept forever",
     note: "A place for the things a photograph cannot quite capture. The conversation, the feeling, the reason this moment belongs in our sky.",
     alt: "Second photograph selected for our first year together",
-    position: { x: 48, y: 31 },
   },
   {
     id: "year-1-memory-3",
@@ -32,6 +30,13 @@ export const memories: readonly Memory[] = [
     title: "Somewhere with you",
     note: "A place for your own words about this memory, and what it means to look back on it together.",
     alt: "Third photograph selected for our first year together",
-    position: { x: 72, y: 49 },
   },
+  ...[4, 5, 6].map((number): Memory => ({
+    id: `year-1-memory-${number}`,
+    number: String(number).padStart(2, "0"),
+    title: `Memory ${String(number).padStart(2, "0")}`,
+    note: "A place for another moment from our first year. Your photo and personal words will go here.",
+    alt: `Photograph for first-year memory ${number}`,
+    awaitingPhoto: true,
+  })),
 ];

@@ -1,0 +1,378 @@
+/* Jean chapter: a dark Anemo sky, open composition, and restrained interface. */
+.mascot-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.wordmark .cat-mascot {
+  width: 68px;
+  height: 76px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 2px #c0fbe7aa) drop-shadow(0 0 10px #7ce1be44);
+}
+.mascot-brand .wordmark {
+  gap: 10px;
+  font-size: 21px;
+  letter-spacing: 3px;
+}
+.mascot-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.mascot-picker > span {
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: #abd0bf;
+  margin-right: 3px;
+}
+.mascot-picker button {
+  background: #05221d99;
+  border: 1px solid #9edac333;
+  border-radius: 50%;
+  width: 27px;
+  height: 27px;
+  font-size: 10px;
+  color: #a4c5b7;
+}
+.mascot-picker button[aria-pressed="true"] {
+  color: #fff0bf;
+  border-color: #e5d49b;
+  background: #e5d49b19;
+}
+@media (min-width: 901px) {
+  .memory-index .memory-row {
+    padding: 14px 0;
+  }
+}
+@media (min-width: 621px) and (max-width: 900px) {
+  .memory-index .memory-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 20px;
+  }
+  .mascot-brand {
+    gap: 8px;
+  }
+  .mascot-brand .wordmark {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+  .mascot-picker > span {
+    display: none;
+  }
+  .wordmark .cat-mascot {
+    width: 46px;
+    height: 58px;
+  }
+}
+@media (max-width: 620px) {
+  .mascot-brand {
+    position: relative;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .mascot-brand .wordmark {
+    font-size: 16px;
+    letter-spacing: 2px;
+    gap: 8px;
+  }
+  .wordmark .cat-mascot {
+    width: 43px;
+    height: 47px;
+    margin-top: -10px;
+  }
+  .mascot-picker {
+    position: absolute;
+    top: 28px;
+    left: 51px;
+  }
+  .mascot-picker button {
+    width: 24px;
+    height: 24px;
+  }
+  .mascot-picker > span {
+    font-size: 6px;
+  }
+}
+:root {
+  --cream: #edf8ef;
+  --muted: #a6c7bd;
+  --gold: #b2dfca;
+  --line: #91d9c51c;
+}
+html,
+body {
+  background: #021815;
+}
+.universe {
+  grid-template-columns: minmax(235px, 22%) minmax(400px, 1fr) minmax(
+      245px,
+      23%
+    );
+  grid-template-rows: 96px minmax(650px, calc(100svh - 96px));
+  background: radial-gradient(ellipse at 55% 75%, #086f5d, #011915 75%);
+}
+.three-sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.three-sky canvas,
+.three-constellation canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.three-constellation[data-state="fallback"] canvas {
+  visibility: hidden;
+}
+.site-header {
+  border-bottom: 0;
+}
+.wordmark small {
+  display: none;
+}
+.chapter-intro {
+  padding-top: 25px;
+}
+.chapter-heading {
+  margin-top: 95px;
+}
+.chapter-heading h1 {
+  font-size: clamp(48px, 4.1vw, 72px);
+}
+.chapter-heading h1 em {
+  color: #d4f5df;
+}
+.chapter-description {
+  max-width: 260px;
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 1.55;
+  color: #c4e4d5;
+}
+.chapter-rule {
+  width: 120px;
+  margin: 23px 0;
+}
+.year-label {
+  display: none;
+}
+.chapter-progress {
+  width: 155px;
+  padding: 30px 0 45px;
+}
+.chapter-progress > p:first-child {
+  color: #a4cbbd;
+}
+.chapter-progress p > span {
+  color: #d6f6e4;
+}
+.progress-track > span {
+  background: #90efd3;
+  box-shadow: 0 0 12px #51dfad88;
+}
+.progress-caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.constellation-stage {
+  min-height: 650px;
+}
+.constellation-map {
+  width: 125%;
+  height: min(810px, calc(100svh - 110px));
+  min-height: 640px;
+  aspect-ratio: auto;
+  margin-left: -12%;
+}
+.three-constellation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.memory-star {
+  padding: 0;
+  width: 64px;
+  height: 64px;
+  color: #d7fff0;
+}
+.star-focus-ring {
+  display: block;
+  position: absolute;
+  inset: 9px;
+  border: 1px solid #c5ffe9;
+  border-radius: 50%;
+  opacity: 0;
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
+}
+.memory-star:hover .star-focus-ring,
+.memory-star:focus-visible .star-focus-ring {
+  opacity: 0.8;
+  transform: scale(1.2);
+}
+.star-label {
+  opacity: 0;
+  top: 60px;
+  color: #e4fff4;
+  transition: opacity 0.25s;
+  text-shadow: 0 2px 10px #001710;
+}
+.star-label > span {
+  color: #abefdb;
+}
+.memory-star:hover .star-label,
+.memory-star:focus-visible .star-label {
+  opacity: 1;
+}
+.three-constellation[data-state="fallback"] ~ .memory-star .star-focus-ring,
+.three-constellation[data-state="loading"] ~ .memory-star .star-focus-ring {
+  opacity: 1;
+  background: #65d5b944;
+  box-shadow: 0 0 22px #7cf4c799;
+}
+.three-constellation[data-state="fallback"] ~ .memory-star .star-label {
+  opacity: 1;
+}
+.memory-index {
+  padding-left: 12px;
+}
+.memory-index > .eyebrow,
+.memory-index > h2 {
+  display: none;
+}
+.memory-row {
+  padding: 22px 0;
+  border: 0;
+}
+.memory-row-copy strong {
+  font-size: 23px;
+}
+.memory-row-copy small {
+  color: #9acbbb;
+}
+.memory-row-copy > span {
+  color: #9ebeb3;
+}
+.memory-medallion {
+  background: #0b302c66;
+  border-color: #9edac366;
+}
+.memory-medallion svg {
+  color: #b8ebd7;
+}
+.visited .memory-medallion {
+  border-color: #b0ffdf;
+  box-shadow: 0 0 18px #68ffd022;
+}
+.visited .memory-medallion svg {
+  color: #d6ffed;
+}
+.row-arrow {
+  color: #9dc8ba;
+}
+.memory-sheet {
+  background: linear-gradient(130deg, #112e2a, #0a211e);
+  border-color: #a1d9bd55;
+}
+.photo-area {
+  background: #031512;
+}
+.personal-note {
+  color: #bfd4ca;
+}
+.round-button {
+  background: #09272055;
+  border-color: #a1d9bd44;
+}
+.overview {
+  position: relative;
+}
+@media (min-width: 1700px) {
+  .universe {
+    grid-template-rows: 100px minmax(720px, calc(100svh - 100px));
+  }
+  .constellation-map {
+    height: min(1000px, calc(100svh - 105px));
+  }
+}
+@media (max-width: 1150px) {
+  .universe {
+    grid-template-columns: 205px minmax(300px, 1fr) 230px;
+  }
+  .chapter-description {
+    font-size: 19px;
+  }
+  .memory-row-copy strong {
+    font-size: 19px;
+  }
+}
+@media (max-width: 900px) {
+  .universe {
+    grid-template-columns: 205px 1fr;
+    grid-template-rows: 96px auto auto;
+  }
+  .chapter-heading {
+    margin-top: 50px;
+  }
+  .constellation-map {
+    height: 650px;
+    min-height: 550px;
+    width: 115%;
+    margin-left: -8%;
+  }
+  .memory-index {
+    padding: 0 0 25px;
+  }
+  .memory-row {
+    padding: 18px 0;
+  }
+}
+@media (max-width: 620px) {
+  .universe {
+    display: flex;
+  }
+  .site-header {
+    min-height: 125px;
+  }
+  .chapter-heading {
+    margin-top: 18px;
+  }
+  .chapter-heading h1 {
+    font-size: 48px;
+  }
+  .chapter-description {
+    max-width: 100%;
+    font-size: 19px;
+    margin-bottom: 0;
+  }
+  .chapter-progress {
+    margin-top: 24px;
+    padding: 0;
+    width: 100%;
+  }
+  .constellation-stage {
+    min-height: 540px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .constellation-map {
+    width: 100%;
+    margin: 0;
+    height: 540px;
+    min-height: 540px;
+  }
+  .memory-index {
+    padding: 0 0 35px;
+  }
+  .memory-row-copy strong {
+    font-size: 23px;
+  }
+}

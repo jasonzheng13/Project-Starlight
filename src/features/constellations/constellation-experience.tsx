@@ -1,14 +1,24 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { MascotBrand } from "./mascot-brand";
+import { MemoryEmblem } from "./memory-emblem";
 import { memories } from "../memories/memories";
 import { MemoryViewer } from "../memories/memory-viewer";
-import { ConstellationArt, Sky, StarIcon } from "./sky";
+import { StarIcon } from "./star-icon";
+import { SpaceScene } from "./space-scene";
+import { jeanNodes, memoryNodeIndices } from "./jean-art";
+import { useUiSounds } from "../audio/ui-sounds";
 
 const chapters = ["I", "II", "III", "IV", "V"];
+const firstYearSoundtrack = {
+  title: "Mondstadt",
+  src: "/api/local-music?constellation=year-1",
+};
 
 export function ConstellationExperience() {
+  const { play } = useUiSounds();
+  const illuminated = useRef(new Set<string>());
   const [selected, setSelected] = useState<string | null>(null);
   const [viewed, setViewed] = useState<string[]>([]);
   const [overview, setOverview] = useState(false);
@@ -17,11 +27,18 @@ export function ConstellationExperience() {
   const [notice, setNotice] = useState("");
   const opener = useRef<HTMLElement | null>(null);
   const activeMemory = memories.find((memory) => memory.id === selected);
-  const markViewed = useCallback((id: string) => {
-    setViewed((previous) =>
-      previous.includes(id) ? previous : [...previous, id],
-    );
-  }, []);
+  const markViewed = useCallback(
+    (id: string) => {
+      if (!illuminated.current.has(id)) {
+        illuminated.current.add(id);
+        play("unlock");
+      }
+      setViewed((previous) =>
+        previous.includes(id) ? previous : [...previous, id],
+      );
+    },
+    [play],
+  );
 
   useEffect(() => {
     const update = () => setFullscreen(Boolean(document.fullscreenElement));
@@ -35,6 +52,7 @@ export function ConstellationExperience() {
   }
 
   function closeMemory() {
+    play("back");
     setSelected(null);
     requestAnimationFrame(() => opener.current?.focus());
   }
@@ -64,14 +82,9 @@ export function ConstellationExperience() {
 
   return (
     <main className={`universe ${motion ? "" : "still-sky"}`}>
-      <Sky />
+      <SpaceScene motion={motion} viewed={viewed} />
       <header className="site-header">
-        <Link className="wordmark" href="/" aria-label="Starlight home">
-          <StarIcon />
-          <span>
-            STARLIGHT<small>A UNIVERSE OF US</small>
-          </span>
-        </Link>
+        <MascotBrand soundtrack={overview ? null : firstYearSoundtrack} />
         <nav className="chapter-navigation" aria-label="Years together">
           {chapters.map((chapter, index) => (
             <button
@@ -126,7 +139,9 @@ export function ConstellationExperience() {
                   {index === 0 ? "Where we began" : "Still to be written"}
                 </strong>
                 <small>
-                  {index === 0 ? "Explore 3 memories →" : "Coming later"}
+                  {index === 0
+                    ? `Explore ${memories.length} memories →`
+                    : "Coming later"}
                 </small>
               </button>
             ))}
@@ -135,7 +150,11 @@ export function ConstellationExperience() {
       ) : (
         <>
           <aside className="chapter-intro">
-            <button className="back-button" onClick={() => setOverview(true)}>
+            <button
+              data-sound="back"
+              className="back-button"
+              onClick={() => setOverview(true)}
+            >
               ← <span>Our universe</span>
             </button>
             <div className="chapter-heading">
@@ -149,9 +168,9 @@ export function ConstellationExperience() {
                 <span />✧<span />
               </div>
               <p className="chapter-description">
-                Before a universe of memories,
-                <br />
-                there was a little spark.
+                I am Jean, the Dandelion Knight, requesting approval to join
+                your party. From this day onwards, my honor and loyalty lie with
+                you.
               </p>
               <span className="year-label">
                 YEAR I <span>·</span> OUR FIRST CHAPTER
@@ -159,7 +178,8 @@ export function ConstellationExperience() {
             </div>
             <div className="chapter-progress">
               <p>
-                <span>{String(viewed.length).padStart(2, "0")}</span> / 03{" "}
+                <span>{String(viewed.length).padStart(2, "0")}</span> /{" "}
+                {String(memories.length).padStart(2, "0")}{" "}
                 <small>MEMORIES ILLUMINATED</small>
               </p>
               <div className="progress-track">
@@ -182,33 +202,31 @@ export function ConstellationExperience() {
             aria-label="First-year constellation"
           >
             <div className="constellation-map">
-              <ConstellationArt viewed={viewed} />
-              {memories.map((memory) => (
+              <SpaceScene
+                constellation
+                motion={motion && !activeMemory}
+                viewed={viewed}
+              />
+              {memories.map((memory, index) => (
                 <button
                   key={memory.id}
+                  data-memory-index={index}
+                  data-sound="open"
                   className={`memory-star ${viewed.includes(memory.id) ? "is-viewed" : ""}`}
                   style={{
-                    left: `${memory.position.x}%`,
-                    top: `${memory.position.y}%`,
+                    left: `${(jeanNodes[memoryNodeIndices[index]][0] / 600) * 100}%`,
+                    top: `${(jeanNodes[memoryNodeIndices[index]][1] / 700) * 100}%`,
                   }}
                   onClick={() => openMemory(memory.id)}
                   aria-label={`Open memory ${memory.number}: ${memory.title}`}
                 >
-                  <span className="star-halo" />
-                  <span className="star-orbit" />
-                  <StarIcon />
+                  <span className="star-focus-ring" />
                   <span className="star-label">
                     <span>{memory.number}</span>
                     {memory.title}
                   </span>
                 </button>
               ))}
-              <div className="map-coordinate coordinate-top">
-                CHAPTER I <span>✧</span> THE BEGINNING
-              </div>
-              <p className="map-caption">
-                <span>✧</span> Every little moment has a place in our sky.
-              </p>
             </div>
           </section>
 
@@ -216,7 +234,15 @@ export function ConstellationExperience() {
             <p className="eyebrow">THE STARS WE KEEP</p>
             <h2>Three little infinities.</h2>
             <div className="memory-list">
-              {memories.map((memory) => (
+              <svg
+                className="memory-list-arc"
+                viewBox="0 0 300 504"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path d="M28 42 C94 152 94 352 28 462" />
+              </svg>
+              {memories.map((memory, index) => (
                 <button
                   key={memory.id}
                   className={
@@ -225,45 +251,22 @@ export function ConstellationExperience() {
                       : "memory-row"
                   }
                   onClick={() => openMemory(memory.id)}
+                  aria-label={`Memory ${memory.number}: ${memory.title}. ${viewed.includes(memory.id) ? "Illuminated; revisit memory" : "Open memory"}`}
+                  data-sound="open"
                 >
                   <span className="memory-medallion">
-                    <StarIcon />
+                    <MemoryEmblem index={index} />
                   </span>
                   <span className="memory-row-copy">
-                    <small>MEMORY {memory.number}</small>
                     <strong>{memory.title}</strong>
-                    <span>
-                      {viewed.includes(memory.id)
-                        ? "Illuminated · revisit"
-                        : "Open this memory"}
-                    </span>
                   </span>
-                  <span className="row-arrow">›</span>
                 </button>
               ))}
             </div>
-            <p className="index-note">
-              Some things are too lovely
-              <br />
-              to leave as just a memory.
-            </p>
           </aside>
         </>
       )}
 
-      <footer className="site-footer">
-        <span>
-          <i /> OUR STORY, AMONG THE STARS
-        </span>
-        <p>
-          {overview
-            ? "Choose a chapter to begin"
-            : "Choose a glowing star to open a memory"}
-        </p>
-        <span>
-          MADE OF LITTLE MOMENTS <StarIcon />
-        </span>
-      </footer>
       {notice && (
         <p className="browser-notice" role="status">
           {notice}

@@ -9,5 +9,6 @@ test-results/
 *.tsbuildinfo
 next-env.d.ts
 pictures/
+music/
 .local/
 *.log

@@ -1,6 +1,6 @@
 # Application architecture
 
-Status: first local slice implemented September 22, 2026 with TypeScript, Next.js, React, and SVG/CSS. Backend and provider choices below remain proposed.
+Status: first local slice implemented September 22, 2026 with TypeScript, Next.js, and React; visual renderer replaced with Three.js on September 23 following user review. Backend and provider choices below remain proposed.
 
 ## Goal
 
@@ -10,7 +10,7 @@ Keep one understandable application while giving backend work real depth. Manage
 
 - TypeScript for application code.
 - Next.js and React for pages, the memory viewer, and server endpoints.
-- A Three.js scene for constellation depth, stars, and camera movement if the initial experiment supports it. Compare against a simpler SVG/CSS implementation before committing; visual quality matters more than renderer novelty.
+- Three.js renders the animated nebula, depth-layered stars, and Jean-inspired lion constellation. React owns selection and progress; accessible HTML buttons follow projected star coordinates. The user rejected the initial static SVG/CSS atmosphere. Keep GPU cleanup, capped pixel density, reduced motion, and a non-WebGL navigation fallback.
 - PostgreSQL for structured data, with Supabase as the candidate managed database, authentication, and private storage provider.
 - One web deployment. Content processing starts as a local script, not a permanent worker service.
 

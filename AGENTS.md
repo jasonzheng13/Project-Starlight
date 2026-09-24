@@ -15,14 +15,14 @@ Scale explanations to the change, but do not replace teaching with a list of edi
 
 ## Project Structure & Module Organization
 
-Project Starlight is a private anniversary constellation scrapbook. The first local Next.js slice implements one constellation, three memories, a photo viewer, and session-only illumination. Authentication, durable progress, and deployment remain unimplemented.
+Project Starlight is a private anniversary constellation scrapbook. The first local Next.js slice implements one constellation, six memory slots (three supplied photos), a photo viewer, and session-only illumination. Authentication, durable progress, and deployment remain unimplemented.
 
 - `README.md` indexes the specifications and explains the documentation approach.
 - `doc/00-master-spec.md` defines scope; `doc/01-architecture.md` proposes the architecture.
 - `doc/02-*.md` through `doc/07-*.md` cover features, private data, and release requirements.
 - `doc/08-build-plan.md` sequences implementation; `doc/09-optional-ai-memory-search.md` describes optional AI; `doc/10-decisions-and-open-questions.md` tracks decisions.
 
-`src/app` contains routes and global styles; `src/features/constellations` contains the SVG scene; `src/features/memories` contains draft records and the viewer. `tests` contains Playwright checks. Local photos live in ignored `pictures/first_year`; never move them into `public`. Backend services and migrations are future work.
+`src/app` contains routes and styles; `src/features/constellations` contains the Three.js scene, authored Jean lion paths, and accessible HTML controls; `src/features/memories` contains draft records and the viewer. Dispose GPU resources on unmount, honor reduced motion, and preserve navigation when WebGL fails. `tests` contains Playwright checks. Local photos live in ignored `pictures/first_year`; never move them into `public`. Backend services and migrations are future work.
 
 ## Build, Test, and Development Commands
 

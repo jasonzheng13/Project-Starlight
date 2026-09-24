@@ -1,0 +1,134 @@
+.mascot-brand {
+  position: relative;
+  gap: 10px;
+  align-items: center;
+}
+.site-header {
+  z-index: 3;
+}
+.mascot-music-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: none;
+  border-radius: 16px;
+  width: 68px;
+  height: 76px;
+}
+.mascot-music-button .cat-mascot {
+  width: 68px;
+  height: 76px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 2px #c0fbe7aa) drop-shadow(0 0 10px #7ce1be44);
+  transition: filter 0.2s;
+}
+.mascot-music-button:hover .cat-mascot {
+  filter: drop-shadow(0 0 3px #daffee) drop-shadow(0 0 12px #7ce1be88);
+}
+.music-indicator {
+  position: absolute;
+  right: -1px;
+  bottom: 4px;
+  color: #d4edcc;
+  font-size: 12px;
+  text-shadow: 0 1px 5px #002c21;
+}
+.music-popover {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 10px);
+  width: 245px;
+  padding: 14px 16px 12px;
+  background: #08271ff2;
+  border: 1px solid #a9d1b745;
+  border-radius: 12px;
+  box-shadow: 0 14px 40px #0006;
+  backdrop-filter: blur(18px);
+  z-index: 10;
+}
+.music-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #e2f0d7;
+  font-family: var(--serif);
+  font-size: 22px;
+}
+.effects-heading {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #a9d1b730;
+  font-size: 18px;
+}
+.music-play,
+.music-mute {
+  display: grid;
+  place-items: center;
+  background: none;
+  color: #cbe4c5;
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 20px;
+  border-radius: 50%;
+}
+.music-play:hover,
+.music-mute:hover {
+  background: #b4e3c519;
+}
+.music-play:disabled {
+  opacity: 0.4;
+}
+.music-volume-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 5px;
+}
+.music-volume-row input {
+  width: 100%;
+  min-width: 0;
+  height: 24px;
+  cursor: pointer;
+  accent-color: #b6dfb5;
+}
+.music-volume-row input:focus-visible {
+  outline: 2px solid #f3d79b;
+  outline-offset: 4px;
+  border-radius: 5px;
+}
+.music-volume-row output {
+  min-width: 31px;
+  text-align: right;
+  font-size: 10px;
+  color: #cbe4c5;
+  font-variant-numeric: tabular-nums;
+}
+.music-popover p {
+  color: #a4bfb0;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+@media (max-width: 900px) {
+  .mascot-music-button,
+  .mascot-music-button .cat-mascot {
+    width: 46px;
+    height: 58px;
+  }
+}
+@media (max-width: 620px) {
+  .mascot-brand {
+    align-items: center;
+    margin-top: -10px;
+  }
+  .mascot-music-button,
+  .mascot-music-button .cat-mascot {
+    width: 43px;
+    height: 47px;
+  }
+  .music-popover {
+    top: calc(100% + 8px);
+  }
+}

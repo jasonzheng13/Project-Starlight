@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import { UiSounds } from "../features/audio/ui-sounds";
 import "./globals.css";
+import "./jean-theme.css";
+import "./music-controls.css";
+import "./constellation-menu.css";
 
 export const metadata: Metadata = {
   title: "Starlight · Our constellation",
@@ -12,7 +16,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <UiSounds>{children}</UiSounds>
+      </body>
     </html>
   );
 }

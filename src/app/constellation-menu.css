@@ -1,0 +1,171 @@
+/* Jean's right-side menu uses an arc of medallions and single-line hierarchy. */
+.memory-index {
+  padding: 0;
+  align-self: center;
+}
+.memory-index .memory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  position: relative;
+}
+.memory-list::before {
+  display: none;
+}
+.memory-list-arc {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 504px;
+  pointer-events: none;
+  overflow: visible;
+}
+.memory-list-arc path {
+  fill: none;
+  stroke: #8ad6ba;
+  stroke-width: 2;
+  opacity: 0.16;
+}
+.memory-index .memory-row {
+  --arc-offset: 0px;
+  margin-left: var(--arc-offset);
+  width: calc(100% - var(--arc-offset));
+  min-height: 84px;
+  padding: 9px 0;
+  flex: none;
+  gap: 16px;
+  border: 0;
+  border-radius: 32px 4px 4px 32px;
+  transition: background 0.2s;
+}
+.memory-index .memory-row:nth-of-type(2),
+.memory-index .memory-row:nth-of-type(5) {
+  --arc-offset: 30px;
+}
+.memory-index .memory-row:nth-of-type(3),
+.memory-index .memory-row:nth-of-type(4) {
+  --arc-offset: 48px;
+}
+.memory-index .memory-medallion {
+  width: 56px;
+  height: 56px;
+  margin: 0;
+  border: 2px solid #b4fff4;
+  background: radial-gradient(circle, #173f36 0%, #072820 65%, #001b17 100%);
+  box-shadow:
+    0 0 3px 1px #c2fff6,
+    0 0 9px 3px #35e9dcaa,
+    0 0 19px 5px #20c7b943,
+    inset 0 0 7px 1px #56f6df80;
+  color: #b2c9b7;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    color 0.2s;
+}
+.memory-index .memory-medallion::after {
+  inset: 5px;
+  border-color: #a9ffed45;
+}
+.memory-index .memory-medallion .memory-emblem {
+  width: 37px;
+  height: 37px;
+  object-fit: contain;
+  color: inherit;
+  filter: none;
+}
+.memory-index .memory-row-copy {
+  gap: 0;
+}
+.memory-index .memory-row-copy strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #c5c9b7;
+  text-shadow: 0 2px 3px #001510b3;
+  transition: color 0.2s;
+}
+.memory-index .memory-row:hover,
+.memory-index .memory-row:focus-visible {
+  background: linear-gradient(90deg, #8adbbb15, transparent);
+}
+.memory-index .memory-row:hover .memory-medallion,
+.memory-index .memory-row:focus-visible .memory-medallion,
+.memory-index .visited .memory-medallion {
+  border-color: #d7fff0;
+  color: #efffdf;
+  box-shadow:
+    0 0 4px 1px #e1fffa,
+    0 0 12px 4px #45f5e5bb,
+    0 0 24px 6px #25d6c75c,
+    inset 0 0 10px 2px #69ffe599;
+}
+.memory-index .memory-row:hover .memory-row-copy strong,
+.memory-index .memory-row:focus-visible .memory-row-copy strong,
+.memory-index .visited .memory-row-copy strong {
+  color: #fff8df;
+}
+@media (max-width: 1150px) and (min-width: 901px) {
+  .memory-index .memory-row {
+    gap: 11px;
+  }
+  .memory-index .memory-row-copy strong {
+    font-size: 17px;
+  }
+  .memory-index .memory-row:nth-of-type(2),
+  .memory-index .memory-row:nth-of-type(5) {
+    --arc-offset: 18px;
+  }
+  .memory-index .memory-row:nth-of-type(3),
+  .memory-index .memory-row:nth-of-type(4) {
+    --arc-offset: 28px;
+  }
+  .memory-list-arc {
+    width: 210px;
+  }
+}
+@media (max-width: 900px) and (min-width: 621px) {
+  .memory-index .memory-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 25px;
+  }
+  .memory-list-arc {
+    display: none;
+  }
+  .memory-index .memory-row:nth-of-type(n) {
+    --arc-offset: 0px;
+  }
+}
+@media (max-width: 620px) {
+  .memory-index {
+    padding: 0 0 35px;
+  }
+  .memory-index .memory-row {
+    min-height: 78px;
+    gap: 17px;
+  }
+  .memory-index .memory-row-copy strong {
+    font-size: 18px;
+  }
+  .memory-index .memory-row:nth-of-type(2),
+  .memory-index .memory-row:nth-of-type(5) {
+    --arc-offset: 20px;
+  }
+  .memory-index .memory-row:nth-of-type(3),
+  .memory-index .memory-row:nth-of-type(4) {
+    --arc-offset: 32px;
+  }
+  .memory-list-arc {
+    width: 230px;
+    height: 468px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .memory-index * {
+    transition: none;
+  }
+}

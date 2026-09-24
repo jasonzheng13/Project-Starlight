@@ -9,6 +9,130 @@ async function mockPhotos(page: Page) {
   );
 }
 
+test("six star targets open six distinct memories and navigation wraps", async ({
+  page,
+}) => {
+  await mockPhotos(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.locator(".memory-star")).toHaveCount(6);
+  for (let index = 0; index < 6; index++) {
+    await page.locator(".memory-star").nth(index).click();
+    await expect(page.locator(".memory-photo")).toHaveAttribute(
+      "src",
+      new RegExp(`year-1-memory-${index + 1}\\?`),
+    );
+    await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
+    await page.getByRole("button", { name: "Close memory" }).click();
+  }
+  await page.locator(".memory-star").first().click();
+  await page.getByRole("button", { name: "← Previous" }).click();
+  await expect(page.locator(".viewer-navigation")).toContainText("06 / 06");
+  await page.getByRole("button", { name: "Next →" }).click();
+  await expect(page.locator(".viewer-navigation")).toContainText("01 / 06");
+});
+
+test("unfilled memories explain missing content without illuminating", async ({
+  page,
+}) => {
+  await page.route("**/api/local-media/year-1-memory-4**", (route) =>
+    route.fulfill({ status: 404 }),
+  );
+  await page.goto("/");
+  await page.locator(".memory-row").nth(3).click();
+  await expect(
+    page.getByRole("heading", { name: "A memory waiting to be added." }),
+  ).toBeVisible();
+  await expect(page.locator(".chapter-progress > p > span")).toHaveText("00");
+});
+
+test("Three.js renders without shader errors and the pause control freezes the sky", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => {
+    if (
+      message.type() === "error" &&
+      /THREE|shader|WebGL/i.test(message.text())
+    )
+      errors.push(message.text());
+  });
+  await page.goto("/");
+  await expect(page.locator(".three-sky")).toHaveAttribute(
+    "data-state",
+    "ready",
+  );
+  await expect(page.locator(".three-sky")).toHaveAttribute(
+    "data-motion",
+    "running",
+  );
+  await page.getByRole("button", { name: "Pause sky motion" }).click();
+  await expect(page.locator(".three-sky")).toHaveAttribute(
+    "data-motion",
+    "paused",
+  );
+  await expect(page.locator(".three-constellation")).toHaveAttribute(
+    "data-motion",
+    "paused",
+  );
+  await page.evaluate(() => document.fonts.ready);
+  const paused = await page.screenshot({
+    path: ".local/paused-before.png",
+    animations: "disabled",
+  });
+  await page.waitForTimeout(350);
+  expect(
+    (
+      await page.screenshot({
+        path: ".local/paused-after.png",
+        animations: "disabled",
+      })
+    ).equals(paused),
+  ).toBe(true);
+  await page.getByRole("button", { name: "Enable sky motion" }).click();
+  await expect(page.locator(".three-sky")).toHaveAttribute(
+    "data-motion",
+    "running",
+  );
+  const moving = await page.screenshot();
+  await page.waitForTimeout(350);
+  expect((await page.screenshot()).equals(moving)).toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test("memory list and stars remain usable when WebGL cannot initialize", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    Object.defineProperty(HTMLCanvasElement.prototype, "getContext", {
+      value: function (
+        this: HTMLCanvasElement,
+        kind: string,
+        ...args: unknown[]
+      ) {
+        return kind.startsWith("webgl")
+          ? null
+          : Reflect.apply(original, this, [kind, ...args]);
+      },
+    });
+  });
+  await mockPhotos(page);
+  await page.goto("/");
+  await expect(page.locator(".three-constellation")).toHaveAttribute(
+    "data-state",
+    "fallback",
+  );
+  await page.locator(".memory-row").first().click();
+  await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
+  await page.getByRole("button", { name: "Close memory" }).click();
+  await page
+    .getByRole("button", { name: "Open memory 01: The first little spark" })
+    .click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+});
+
 test("stars open memories; next, previous, Escape and focus restoration work", async ({
   page,
 }) => {
@@ -90,12 +214,12 @@ test("a delayed previous photo cannot replace the latest selection", async ({
   );
 });
 
-test("all three memories illuminate; overview and list remain usable", async ({
+test("all six memories illuminate; overview and list remain usable", async ({
   page,
 }) => {
   await mockPhotos(page);
   await page.goto("/");
-  for (let index = 0; index < 3; index++) {
+  for (let index = 0; index < 6; index++) {
     await page.locator(".memory-row").nth(index).click();
     await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
     await page.getByRole("button", { name: "Close memory" }).click();
@@ -108,7 +232,7 @@ test("all three memories illuminate; overview and list remain usable", async ({
     page.getByRole("heading", { name: "Written in the stars." }),
   ).toBeVisible();
   await page.getByRole("button", { name: /YEAR I Where we began/ }).click();
-  await expect(page.locator(".chapter-progress > p > span")).toHaveText("03");
+  await expect(page.locator(".chapter-progress > p > span")).toHaveText("06");
   await page.reload();
   await expect(page.locator(".chapter-progress > p > span")).toHaveText("00");
 });
@@ -117,7 +241,19 @@ test("responsive layout and reduced motion", async ({ page }) => {
   await mockPhotos(page);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(page.locator(".nebula-one")).toHaveCSS("animation-name", "none");
+  await expect(page.locator(".three-constellation")).toHaveAttribute(
+    "data-state",
+    "ready",
+  );
+  await expect(page.locator(".three-sky")).toHaveAttribute(
+    "data-motion",
+    "paused",
+  );
+  await expect(page.locator(".site-footer")).toHaveCount(0);
+  await expect(page.locator(".map-caption")).toHaveCount(0);
+  await expect(page.locator(".chapter-description")).toHaveText(
+    "I am Jean, the Dandelion Knight, requesting approval to join your party. From this day onwards, my honor and loyalty lie with you.",
+  );
   await page.screenshot({ path: ".local/desktop-preview.png", fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator(".memory-row").first()).toBeVisible();

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Memory } from "./memories";
-import { StarIcon } from "../constellations/sky";
+import { memories, type Memory } from "./memories";
+import { StarIcon } from "../constellations/star-icon";
 
 export function MemoryViewer({
   memory,
@@ -56,6 +56,7 @@ export function MemoryViewer({
       <div className="memory-sheet">
         <button
           className="dialog-close round-button"
+          data-sound="none"
           aria-label="Close memory"
           onClick={onClose}
         >
@@ -71,9 +72,15 @@ export function MemoryViewer({
           {status === "error" && (
             <div className="photo-state" role="alert">
               <StarIcon />
-              <h3>This star is still here.</h3>
+              <h3>
+                {memory.awaitingPhoto
+                  ? "A memory waiting to be added."
+                  : "This star is still here."}
+              </h3>
               <p>
-                The photo couldn’t open. You can try again or keep exploring.
+                {memory.awaitingPhoto
+                  ? "Your next first-year photo belongs here. You can keep exploring and return once it has been added."
+                  : "The photo couldn’t open. You can try again or keep exploring."}
               </p>
               <button
                 className="outline-button"
@@ -124,9 +131,15 @@ export function MemoryViewer({
             One small moment. A place in our universe.
           </p>
           <nav className="viewer-navigation" aria-label="Memory navigation">
-            <button onClick={onPrevious}>← Previous</button>
-            <span>{memory.number} / 03</span>
-            <button onClick={onNext}>Next →</button>
+            <button data-sound="change" onClick={onPrevious}>
+              ← Previous
+            </button>
+            <span>
+              {memory.number} / {String(memories.length).padStart(2, "0")}
+            </span>
+            <button data-sound="change" onClick={onNext}>
+              Next →
+            </button>
           </nav>
         </div>
       </div>

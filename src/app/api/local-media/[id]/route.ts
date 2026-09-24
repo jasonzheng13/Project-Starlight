@@ -8,6 +8,9 @@ const files: Record<string, string> = {
   "year-1-memory-1": "first_year_1.png",
   "year-1-memory-2": "first_year_2.png",
   "year-1-memory-3": "first_year_3.png",
+  "year-1-memory-4": "first_year_4.png",
+  "year-1-memory-5": "first_year_5.png",
+  "year-1-memory-6": "first_year_6.png",
 };
 
 // This is a local preview adapter, not authentication. Production fails closed.
