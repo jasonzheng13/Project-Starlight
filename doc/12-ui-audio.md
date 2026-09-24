@@ -20,7 +20,7 @@ The official event's `index_9ebceaa3d0ec1c0141cb.js` references these files unde
 | `unlock.8ffc906c..mp3` | `unlock.mp3` | First successful photo load per memory |
 
 The mapping is our design choice. Hover is an attenuated button clip, not a
-separately verified game hover asset. Downloaded clips remain in ignored `music/`;
+separately verified game hover asset. Clips are tracked in `music/` at the user's request for cross-computer development;
 availability online does not establish redistribution permission. This local
 adapter returns 404 outside development, without `LOCAL_PRIVATE_MEDIA=true`, or
 for non-loopback hosts. No third-party request occurs during page use.
@@ -41,6 +41,6 @@ stops voices, and closes the context. Volume is session-only.
 
 `tests/sounds.spec.ts` checks real local MP3 decoding, playback triggers, independent
 mute/volume, close actions, and invalid-audio resilience. The real-file check skips
-on fresh clones without local clips. Tests verify scheduling, not subjective sound
+if the local media adapter or clips are unavailable. Tests verify scheduling, not subjective sound
 similarity. Audition against the actual game before claiming an exact match; visual
 transitions remain a later step.

@@ -22,7 +22,7 @@ Project Starlight is a private anniversary constellation scrapbook. The first lo
 - `doc/02-*.md` through `doc/07-*.md` cover features, private data, and release requirements.
 - `doc/08-build-plan.md` sequences implementation; `doc/09-optional-ai-memory-search.md` describes optional AI; `doc/10-decisions-and-open-questions.md` tracks decisions.
 
-`src/app` contains routes and styles; `src/features/constellations` contains the Three.js scene, authored Jean lion paths, and accessible HTML controls; `src/features/memories` contains draft records and the viewer. Dispose GPU resources on unmount, honor reduced motion, and preserve navigation when WebGL fails. `tests` contains Playwright checks. Local photos live in ignored `pictures/first_year`; never move them into `public`. Backend services and migrations are future work.
+`src/app` contains routes and styles; `src/features/constellations` contains the Three.js scene, authored Jean lion paths, and accessible HTML controls; `src/features/memories` contains draft records and the viewer. Dispose GPU resources on unmount, honor reduced motion, and preserve navigation when WebGL fails. `tests` contains Playwright checks. Tracked development photos live in `pictures/first_year`; never move them into `public`. Backend services and migrations are future work.
 
 ## Build, Test, and Development Commands
 
@@ -52,6 +52,6 @@ Use concise, imperative commit subjects, following the early history (for exampl
 
 ## Security & Configuration
 
-Use synthetic development and demo content. Keep credentials and private memories out of Git; document configuration names without secret values. Preserve server-side authorization and private media storage when implementing the proposed architecture.
+Use synthetic content for shared demos. At the user's explicit request, track `pictures/` and `music/` so the development assets transfer between computers through Git. Keep credentials, `.env.local`, and private screenshots out of Git. Repository collaborators can access tracked media. Preserve server-side authorization and private media storage when implementing the proposed architecture.
 
 The current local photo adapter requires `LOCAL_PRIVATE_MEDIA=true` in ignored `.env.local` and development mode; production returns 404. It is not authentication. Do not deploy private content until the membership and storage protections in `doc/02-private-access-and-data.md` are implemented.

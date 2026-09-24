@@ -50,6 +50,8 @@ For a meaningful change, add: date; question; choice; reason; downside accepted;
 
 ## Initial decision record
 
+September 24 cross-computer setup: the user explicitly requested tracking photos and music to transfer the complete development experience through GitHub. Track `pictures/` and `music/`, overriding earlier ignored-media decisions. Keep dependencies, generated output, screenshots, logs, and local environment files ignored. `.env.example` includes the non-secret preview flag; copy it locally after cloning. Downside accepted: repository access now includes the supplied media and its Git history. Production media endpoints remain disabled.
+
 September 24 soundtrack and glow: Year I selects its own Mondstadt track through a fixed server allowlist. The supplied MP3 is currently under ignored `music/sfx/`; the overview has no soundtrack. Leaving Year I stops and resets music; memory dialogs keep it playing. Future constellations must provide their own track mapping. All six emblems now have a persistent cyan-teal rim with layered bloom, with stronger hover/focus/visited states, matching the supplied game reference more closely.
 
 September 24 icon replacement: replace original SVG emblems with Jean's six constellation PNG icons, sourced via Genshin.gg and checked against the user's reference. Preserve memory labels, ordering, and interaction behavior. Reason: the user explicitly requested the actual icon shapes. See [icon provenance](13-jean-icons.md). Supersedes the original-icon choice in the earlier menu refinement.

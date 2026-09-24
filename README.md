@@ -10,12 +10,13 @@ Requires Node.js 22+ and npm. From this repository:
 
 ```sh
 npm ci
+cp .env.example .env.local # macOS: enable the local media preview
 npm run dev
 ```
 
 Open **http://127.0.0.1:3000**. The dev server listens only on this computer. Fonts are bundled locally; no font CDN is needed.
 
-For the supplied photo preview, put `first_year_1.png`, `first_year_2.png`, and `first_year_3.png` in `pictures/first_year/`. Copy `.env.example` to `.env.local` and set `LOCAL_PRIVATE_MEDIA=true`. The existing local workspace is already configured. Photos and `.env.local` are ignored by Git. Originals remain unchanged and display at their original proportions. Titles and notes are clearly marked drafts in the viewer.
+The supplied photos in `pictures/first_year/` and audio in `music/` are tracked so a clone or pull includes them. Copy `.env.example` to `.env.local` on a new computer (PowerShell: `Copy-Item .env.example .env.local`). The example enables `LOCAL_PRIVATE_MEDIA=true`; local secrets remain ignored. Originals display at their original proportions. Titles and notes are drafts.
 
 This is a local preview, not authenticated hosting. `/api/local-media/[id]` uses a fixed filename allowlist, requires the local flag and development mode, and returns 404 in production even if the flag is enabled. Do not put private images in `public/` or deploy this adapter as a private-access solution.
 
@@ -23,9 +24,9 @@ This is a local preview, not authenticated hosting. `/api/local-media/[id]` uses
 
 ### Music
 
-Cat B is the selected header mascot. Click the cat to open the volume slider, play/pause, and mute controls. The player attempts autoplay at 30% volume and loops; browsers may require clicking the cat or Play before audible playback is allowed. Music continues while memories and the overview are opened. Settings currently last for the mounted page session.
+Cat B is the selected header mascot. Click the cat to open the volume slider, play/pause, and mute controls. The player attempts autoplay at 30% volume and loops; browsers may require clicking the cat or Play before audible playback is allowed. Music continues inside memory dialogs and stops on the overview. Settings currently last for the mounted page session.
 
-Year I uses the supplied `music/sfx/City of Winds and Idylls - Disc 1 City of Winds and Idylls｜Genshin Impact.mp3` (ignored by Git). The page passes its soundtrack to the cat controls; the overview is silent, and leaving the constellation stops and resets the track. Memory dialogs keep it playing. Future pages select their own soundtrack. The development-only `/api/local-music?constellation=year-1` endpoint maps the ID to a fixed local file, supports byte-range streaming, and returns 404 in production or for unknown IDs. A missing file shows a recoverable unavailable state. Automated tests use a generated silent WAV.
+Year I uses the supplied `music/sfx/City of Winds and Idylls - Disc 1 City of Winds and Idylls｜Genshin Impact.mp3` (tracked for cross-computer development). The page passes its soundtrack to the cat controls; the overview is silent, and leaving the constellation stops and resets the track. Memory dialogs keep it playing. Future pages select their own soundtrack. The development-only `/api/local-music?constellation=year-1` endpoint maps the ID to a fixed local file, supports byte-range streaming, and returns 404 in production or for unknown IDs. A missing file shows a recoverable unavailable state. Automated tests use a generated silent WAV.
 
 Add the remaining first-year photos as `pictures/first_year/first_year_4.png`, `first_year_5.png`, and `first_year_6.png`. The route already accepts them. Missing photos show an awaiting-content message; retry loads a newly added file without a code change. Progress increases only when a photo loads successfully.
 
@@ -40,7 +41,7 @@ Add the remaining first-year photos as `pictures/first_year/first_year_4.png`, `
 | `npm run build` | Compile and type-check the production application |
 | `npm start` | Preview the production build locally; private photo route is disabled |
 
-Playwright uses synthetic images for behavior tests. An additional local-only check verifies supplied photos if present. Screenshots stay in ignored `.local/` or `test-results/`; do not share private screenshots. A fresh clone works without personal photos and shows a recoverable photo error until configured.
+Playwright uses synthetic images for behavior tests. An additional local-only check verifies supplied photos if present. Screenshots stay in ignored `.local/` or `test-results/`; do not share private screenshots. A fresh clone includes the supplied media; copy the example environment file to enable the local preview.
 
 ## First slice: how the pieces connect
 
