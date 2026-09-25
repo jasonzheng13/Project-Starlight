@@ -1,17 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { memories, type Memory } from "./memories";
+import { type Memory } from "./memories";
 import { StarIcon } from "../constellations/star-icon";
 
 export function MemoryViewer({
   memory,
+  year = "I",
+  total = 6,
+  placeholderOnly = false,
   onClose,
   onNext,
   onPrevious,
   onViewed,
 }: {
   memory: Memory;
+  year?: string;
+  total?: number;
+  placeholderOnly?: boolean;
   onClose: () => void;
   onNext: () => void;
   onPrevious: () => void;
@@ -25,10 +31,10 @@ export function MemoryViewer({
   const [enlarged, setEnlarged] = useState(false);
 
   useEffect(() => {
-    if (status !== "loading") return;
+    if (placeholderOnly || status !== "loading") return;
     const timeout = setTimeout(() => setStatus("error"), 15_000);
     return () => clearTimeout(timeout);
-  }, [status, attempt]);
+  }, [status, attempt, placeholderOnly]);
 
   useEffect(() => {
     const element = dialog.current;
@@ -63,7 +69,14 @@ export function MemoryViewer({
           ×
         </button>
         <div className="photo-area">
-          {status === "loading" && (
+          {placeholderOnly && (
+            <div className="photo-state">
+              <StarIcon />
+              <h3>A memory waiting to be added.</h3>
+              <p>Your Year {year} photo belongs here.</p>
+            </div>
+          )}
+          {!placeholderOnly && status === "loading" && (
             <div className="photo-state" role="status">
               <StarIcon className="loading-star" />
               <p>Opening this memory…</p>
@@ -94,20 +107,22 @@ export function MemoryViewer({
             </div>
           )}
           {/* Original proportions are intentional; these local photos are not public image assets. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            key={attempt}
-            src={`/api/local-media/${memory.id}?attempt=${attempt}`}
-            alt={memory.alt}
-            className={
-              status === "ready" ? "memory-photo ready" : "memory-photo"
-            }
-            onLoad={() => {
-              setStatus("ready");
-              onViewed(memory.id);
-            }}
-            onError={() => setStatus("error")}
-          />
+          {!placeholderOnly && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={attempt}
+              src={`/api/local-media/${memory.id}?attempt=${attempt}`}
+              alt={memory.alt}
+              className={
+                status === "ready" ? "memory-photo ready" : "memory-photo"
+              }
+              onLoad={() => {
+                setStatus("ready");
+                onViewed(memory.id);
+              }}
+              onError={() => setStatus("error")}
+            />
+          )}
           {status === "ready" && (
             <button
               className="enlarge-button"
@@ -120,7 +135,7 @@ export function MemoryViewer({
         </div>
         <div className="memory-copy">
           <p className="eyebrow">
-            YEAR I <span> / </span> MEMORY {memory.number}
+            YEAR {year} <span> / </span> MEMORY {memory.number}
           </p>
           <StarIcon className="memory-ornament" />
           <h2 id="memory-title">{memory.title}</h2>
@@ -135,7 +150,7 @@ export function MemoryViewer({
               ← Previous
             </button>
             <span>
-              {memory.number} / {String(memories.length).padStart(2, "0")}
+              {memory.number} / {String(total).padStart(2, "0")}
             </span>
             <button data-sound="change" onClick={onNext}>
               Next →

@@ -18,6 +18,7 @@ export async function GET(request: Request) {
   const constellation =
     new URL(request.url).searchParams.get("constellation") ?? "year-1";
   const tracks: Record<string, string[]> = {
+    "year-2": ["liyue.mp3"],
     "year-1": [
       "sfx",
       "City of Winds and Idylls - Disc 1 City of Winds and Idylls｜Genshin Impact.mp3",

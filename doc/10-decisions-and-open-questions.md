@@ -4,18 +4,18 @@ Updated September 24, 2026.
 
 ## Confirmed by the user
 
-| Decision | Reason |
-|---|---|
-| Constellation scrapbook | Fits the recipient's interest in beautiful visuals, art, scrapbooks, and games |
-| No puzzles | They may confuse her and are not needed |
-| Together on a computer | This is the intended presentation setting |
-| September 28 anniversary | Sets the release window |
-| Up to $100 initial spending | Free preferred, limited spending acceptable for the gift |
-| Backend learning first | Developer has more frontend experience and wants underlying application depth |
-| AI remains desirable | Add if time permits; preserve it for later otherwise |
-| Personal hand-drawn loaders | Connects the developer's work to the recipient's handmade anniversary art |
-| Symbols remain undecided | Do not invent personal meanings as established facts |
-| Engineering and gift polish both matter | Focus scope rather than assuming one goal can be ignored |
+| Decision                                | Reason                                                                         |
+| --------------------------------------- | ------------------------------------------------------------------------------ |
+| Constellation scrapbook                 | Fits the recipient's interest in beautiful visuals, art, scrapbooks, and games |
+| No puzzles                              | They may confuse her and are not needed                                        |
+| Together on a computer                  | This is the intended presentation setting                                      |
+| September 28 anniversary                | Sets the release window                                                        |
+| Up to $100 initial spending             | Free preferred, limited spending acceptable for the gift                       |
+| Backend learning first                  | Developer has more frontend experience and wants underlying application depth  |
+| AI remains desirable                    | Add if time permits; preserve it for later otherwise                           |
+| Personal hand-drawn loaders             | Connects the developer's work to the recipient's handmade anniversary art      |
+| Symbols remain undecided                | Do not invent personal meanings as established facts                           |
+| Engineering and gift polish both matter | Focus scope rather than assuming one goal can be ignored                       |
 
 ## Proposed defaults
 
@@ -32,17 +32,17 @@ These are implementation recommendations, not additional user commitments.
 
 ## Open items and when they matter
 
-| Open item | Needed by | Can work proceed? |
-|---|---|---|
-| Five personal constellation symbols | Full-gift content stage | Yes, stable IDs and placeholder art |
-| Presentation computer, browser, screen size | First visual experiment | Some work, but performance signoff must wait |
-| Three starter memories and notes | First real-content slice | Yes, synthetic fixtures first |
-| Final message and Year VI meaning | Full-gift content stage | Yes, placeholder route |
-| Loading artwork style and files | Full-gift content stage | Yes, replaceable placeholder |
-| Hosting/provider plans and current limits | Before provision/deploy | Yes, local app first |
-| Actual anniversary start date for any day counter | Before displaying a day count | Omit the counter until known |
-| AI provider and permitted personal data | Before AI activation | Entire gift can proceed |
-| Public-demo content approval | Before publishing portfolio demo | Use synthetic content by default |
+| Open item                                         | Needed by                        | Can work proceed?                            |
+| ------------------------------------------------- | -------------------------------- | -------------------------------------------- |
+| Five personal constellation symbols               | Full-gift content stage          | Yes, stable IDs and placeholder art          |
+| Presentation computer, browser, screen size       | First visual experiment          | Some work, but performance signoff must wait |
+| Three starter memories and notes                  | First real-content slice         | Yes, synthetic fixtures first                |
+| Final message and Year VI meaning                 | Full-gift content stage          | Yes, placeholder route                       |
+| Loading artwork style and files                   | Full-gift content stage          | Yes, replaceable placeholder                 |
+| Hosting/provider plans and current limits         | Before provision/deploy          | Yes, local app first                         |
+| Actual anniversary start date for any day counter | Before displaying a day count    | Omit the counter until known                 |
+| AI provider and permitted personal data           | Before AI activation             | Entire gift can proceed                      |
+| Public-demo content approval                      | Before publishing portfolio demo | Use synthetic content by default             |
 
 ## Decision record format
 
@@ -50,13 +50,19 @@ For a meaningful change, add: date; question; choice; reason; downside accepted;
 
 ## Initial decision record
 
+September 25 character chapters: implement Years III–V for Neuvillette, Baizhu, and Yae Miko at the user's direction. Bind each reference-traced outline, six sourced emblems, exact quote, chapter theme, and six empty year-scoped memories through shared chapter configuration. Assign no soundtrack. Reason: extend the same interface while leaving user photos and music pending. Tradeoff: constellation paths are authored approximations of the supplied references. Owning spec: [constellation experience](04-constellation-experience.md); asset sources: [character chapter assets](15-character-chapter-assets.md).
+
+September 24 loading-screen revision: replace the doorway glow at the user's request with a white screen and the seven elemental emblems fading out and returning in sequence. Use one preloaded WebP strip with CSS luminance masks and a short 2.4-second cycle. Reason: match the supplied loading-screen reference while retaining the existing navigation and motion preferences. Tradeoff: timing is a recreation for review, not verified frame-exact game footage. See [constellation experience](04-constellation-experience.md) and [asset provenance](14-zhongli-assets.md).
+
+September 24 Zhongli and chapter transition: implement Year II now at the user's direction, independent of the proposed build order. Share the scene/viewer/audio behaviors, use reference-traced Lapis Dei linework and original emblem PNGs, keep six photo slots intentionally empty, and reserve Liyue audio. Add the white elemental loading transition with reduced-motion and pause bypasses. Reason: review the second chapter and navigation feel without blocking on photos or an MP3. Tradeoff: linework is an authored approximation; transition fidelity and visual preference await user review. No video asset or animation dependency is added. Owning spec: [constellation experience](04-constellation-experience.md); provenance: [Zhongli assets](14-zhongli-assets.md).
+
 September 24 cross-computer setup: the user explicitly requested tracking photos and music to transfer the complete development experience through GitHub. Track `pictures/` and `music/`, overriding earlier ignored-media decisions. Keep dependencies, generated output, screenshots, logs, and local environment files ignored. `.env.example` includes the non-secret preview flag; copy it locally after cloning. Downside accepted: repository access now includes the supplied media and its Git history. Production media endpoints remain disabled.
 
 September 24 soundtrack and glow: Year I selects its own Mondstadt track through a fixed server allowlist. The supplied MP3 is currently under ignored `music/sfx/`; the overview has no soundtrack. Leaving Year I stops and resets music; memory dialogs keep it playing. Future constellations must provide their own track mapping. All six emblems now have a persistent cyan-teal rim with layered bloom, with stronger hover/focus/visited states, matching the supplied game reference more closely.
 
 September 24 icon replacement: replace original SVG emblems with Jean's six constellation PNG icons, sourced via Genshin.gg and checked against the user's reference. Preserve memory labels, ordering, and interaction behavior. Reason: the user explicitly requested the actual icon shapes. See [icon provenance](13-jean-icons.md). Supersedes the original-icon choice in the earlier menu refinement.
 
-September 24 audio pass: add a shared Web Audio controller and independent effects volume beneath Cat B. Use four locally downloaded effects from the official Dream of Roving Stars web event. Hover reuses a quieter button clip; these are not verified matches for the desktop constellation menu. Keep source files ignored and serve only through the development adapter. Reason: traceable small assets and one reusable playback boundary; missing audio must not break navigation. Downside accepted: exact game fidelity remains unverified, and fresh clones need the local files. See [UI audio](12-ui-audio.md) for provenance and mappings. Visual transitions remain deferred.
+September 24 audio pass: add a shared Web Audio controller and independent effects volume beneath Cat B. Use four locally downloaded effects from the official Dream of Roving Stars web event. Hover reuses a quieter button clip; these are not verified matches for the desktop constellation menu. Keep source files ignored and serve only through the development adapter. Reason: traceable small assets and one reusable playback boundary; missing audio must not break navigation. Downside accepted: exact game fidelity remains unverified, and fresh clones need the local files. See [UI audio](12-ui-audio.md) for provenance and mappings. Chapter navigation now uses the white elemental loading screen described in the September 24 revision.
 
 September 24 menu refinement: user requested stronger fidelity to Genshin's right-side constellation UI. Compared an in-game Jean screenshot and implemented curved row offsets, distinct circular emblems, a subdued curved connector, bold cream titles, and glowing interaction states. Remove redundant row text and arrows. Preserve memory labels and accessible status announcements; no false lock state. Downside accepted: original icons and a substitute font approximate the game rather than reproduce its assets exactly. Status: visually checked at desktop/mobile sizes; all 14 browser checks and production build pass.
 

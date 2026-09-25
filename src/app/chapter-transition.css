@@ -1,0 +1,65 @@
+/* A single disappearance/return wave, with the chapter reveal under opaque white. */
+.chapter-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #fff;
+  animation: loading-screen var(--transition-duration) linear both;
+}
+.loading-elements {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  width: min(56vw, 960px);
+  aspect-ratio: 8 / 1;
+}
+.loading-element {
+  display: block;
+  background: #777;
+  mask-image: url("/transitions/elements.webp");
+  mask-mode: luminance;
+  mask-size: 700% 100%;
+  mask-repeat: no-repeat;
+  animation: element-return 1000ms ease-in-out both;
+}
+@keyframes loading-screen {
+  0% {
+    opacity: 0;
+  }
+  8%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes element-return {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  28%,
+  48% {
+    opacity: 0;
+  }
+  88% {
+    opacity: 1;
+  }
+}
+@media (max-width: 620px) {
+  .loading-elements {
+    width: 84vw;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-transition {
+    display: none;
+  }
+  .loading-element {
+    animation: none;
+  }
+}

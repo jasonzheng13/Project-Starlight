@@ -1,15 +1,24 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 
-// Jean's C1–C6 artwork, in game order. Provenance: doc/13-jean-icons.md.
-const icons = [1, 2, 3, 4, 5, 6].map(
-  (number) => `/constellations/jean/constellation-${number}.png`,
-);
+const chapterFolders: Record<string, string> = {
+  "year-1": "jean",
+  "year-2": "zhongli",
+  "year-3": "neuvillette",
+  "year-4": "baizhu",
+  "year-5": "yae-miko",
+};
 
-export function MemoryEmblem({ index }: { index: number }) {
+export function MemoryEmblem({
+  index,
+  chapter,
+}: {
+  index: number;
+  chapter: string;
+}) {
   return (
     <Image
       className="memory-emblem"
-      src={icons[index % icons.length]}
+      src={`/constellations/${chapterFolders[chapter]}/constellation-${index + 1}.png`}
       width={100}
       height={100}
       alt=""

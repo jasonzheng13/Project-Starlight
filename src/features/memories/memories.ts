@@ -40,3 +40,24 @@ export const memories: readonly Memory[] = [
     awaitingPhoto: true,
   })),
 ];
+
+export const zhongliEmblemNames = [
+  "Rock, the Backbone of Earth",
+  "Stone, the Cradle of Jade",
+  "Jade, Shimmering through Darkness",
+  "Topaz, Unbreakable and Fearless",
+  "Lazuli, Herald of the Order",
+  "Chrysos, Bounty of Dominator",
+];
+
+export const secondYearMemories: readonly Memory[] = Array.from(
+  { length: 6 },
+  (_, index) => ({
+    id: `year-2-memory-${index + 1}`,
+    number: String(index + 1).padStart(2, "0"),
+    title: `Memory ${String(index + 1).padStart(2, "0")}`,
+    note: "A place for a moment from our second year. Your photo and words will go here.",
+    alt: `Photograph for second-year memory ${index + 1}`,
+    awaitingPhoto: true,
+  }),
+);

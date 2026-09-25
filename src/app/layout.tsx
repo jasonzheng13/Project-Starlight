@@ -4,6 +4,9 @@ import "./globals.css";
 import "./jean-theme.css";
 import "./music-controls.css";
 import "./constellation-menu.css";
+import "./zhongli-theme.css";
+import "./chapter-transition.css";
+import "./character-themes.css";
 
 export const metadata: Metadata = {
   title: "Starlight · Our constellation",

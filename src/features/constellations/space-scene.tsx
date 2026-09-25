@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
-import { jeanEdges, jeanNodes, lionPaths, memoryNodeIndices } from "./jean-art";
+import { jeanArt, type ChapterArt } from "./chapter-art";
 
 const vertex = `varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.,1.); }`;
 const nebulaFragment = `
@@ -59,10 +59,14 @@ export function SpaceScene({
   motion,
   viewed,
   constellation = false,
+  art = jeanArt,
+  chapterId = "year-1",
 }: {
   motion: boolean;
   viewed: string[];
   constellation?: boolean;
+  art?: ChapterArt;
+  chapterId?: string;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const current = useRef({ motion, viewed });
@@ -106,7 +110,7 @@ export function SpaceScene({
 
     if (constellation) {
       const parsed = new SVGLoader().parse(
-        `<svg xmlns="http://www.w3.org/2000/svg">${lionPaths.map((d) => `<path d="${d}" fill="none" stroke="#36bda1"/>`).join("")}</svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg">${art.paths.map((d) => `<path d="${d}" fill="none" stroke="#36bda1"/>`).join("")}</svg>`,
       );
       const lineMaterial = new THREE.LineBasicMaterial({
         color: 0x37c5a7,
@@ -133,13 +137,13 @@ export function SpaceScene({
         blending: THREE.AdditiveBlending,
       });
       disposables.push(connectionMaterial);
-      for (const [a, b] of jeanEdges) {
+      for (const [a, b] of art.edges) {
         const geometry = new THREE.BufferGeometry().setFromPoints(
           [a, b].map(
             (i) =>
               new THREE.Vector3(
-                jeanNodes[i][0] - 300,
-                350 - jeanNodes[i][1],
+                art.nodes[i][0] - 300,
+                350 - art.nodes[i][1],
                 0,
               ),
           ),
@@ -147,7 +151,7 @@ export function SpaceScene({
         group.add(new THREE.Line(geometry, connectionMaterial));
         disposables.push(geometry);
       }
-      for (const [x, y] of jeanNodes) {
+      for (const [x, y] of art.nodes) {
         const material = new THREE.SpriteMaterial({
           map: texture,
           color: 0xc3ffed,
@@ -269,16 +273,16 @@ export function SpaceScene({
       }
       if (constellation) {
         stars.forEach((star, i) => {
-          const memoryIndex = memoryNodeIndices.indexOf(i);
+          const memoryIndex = art.memoryNodes.indexOf(i);
           const visited = current.current.viewed.includes(
-            `year-1-memory-${memoryIndex + 1}`,
+            `${chapterId}-memory-${memoryIndex + 1}`,
           );
           star.scale.setScalar(
             (visited ? 148 : 125) * (1 + Math.sin(time * 0.9 + i) * 0.07),
           );
         });
         group.updateMatrixWorld();
-        memoryNodeIndices.forEach((node, i) => {
+        art.memoryNodes.forEach((node, i) => {
           const button = container.parentElement?.querySelector<HTMLElement>(
             `[data-memory-index="${i}"]`,
           );
@@ -300,7 +304,7 @@ export function SpaceScene({
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [constellation]);
+  }, [constellation, art, chapterId]);
 
   return (
     <div

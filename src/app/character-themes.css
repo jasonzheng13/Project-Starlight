@@ -1,0 +1,183 @@
+/* Chapter palettes live in CSS while chapter copy/art/data remain configuration. */
+.neuvillette-theme {
+  --cream: #e5f5ff;
+  --muted: #a6c7dd;
+  --gold: #82d8ee;
+  --line: #68a8e52c;
+  background: radial-gradient(ellipse at 52% 72%, #173d83, #08152e 77%);
+}
+.neuvillette-theme .three-sky,
+.neuvillette-theme .three-constellation {
+  filter: hue-rotate(35deg) saturate(0.9);
+}
+.neuvillette-theme .chapter-heading h1 em,
+.neuvillette-theme .chapter-description,
+.neuvillette-theme .chapter-progress p > span,
+.neuvillette-theme .star-label {
+  color: #bdeaff;
+}
+.neuvillette-theme .chapter-progress > p:first-child {
+  color: #9dbbd4;
+}
+.neuvillette-theme .progress-track > span {
+  background: #77e5f0;
+  box-shadow: 0 0 12px #62ccff99;
+}
+.neuvillette-theme .memory-list-arc path {
+  stroke: #75d7f2;
+}
+.neuvillette-theme .memory-index .memory-medallion {
+  border-color: #b2f4ff;
+  background: radial-gradient(circle, #20466a, #0b2038 70%);
+  box-shadow:
+    0 0 3px 1px #d4faff,
+    0 0 9px 3px #55d6f0aa,
+    0 0 19px 5px #318ad044,
+    inset 0 0 7px 1px #77dded88;
+}
+.neuvillette-theme .memory-index .memory-row-copy strong {
+  color: #d9ebf6;
+}
+.neuvillette-theme .memory-index .memory-row:hover,
+.neuvillette-theme .memory-index .memory-row:focus-visible {
+  background: linear-gradient(90deg, #74dff022, transparent);
+}
+.neuvillette-theme .star-focus-ring {
+  border-color: #a0edff;
+}
+.neuvillette-theme .memory-sheet {
+  background: linear-gradient(130deg, #173654, #101f35);
+  border-color: #7bb8dc55;
+}
+.neuvillette-theme .photo-area {
+  background: #07182a;
+}
+.neuvillette-theme .personal-note {
+  color: #c2d8e4;
+}
+.neuvillette-theme .round-button {
+  background: #13304e77;
+  border-color: #8ecce344;
+}
+
+.baizhu-theme {
+  --cream: #edffe8;
+  --muted: #b3d3a6;
+  --gold: #a9ed79;
+  --line: #9bd66b2c;
+  background: radial-gradient(ellipse at 48% 78%, #27653c, #0c231b 78%);
+}
+.baizhu-theme .three-sky,
+.baizhu-theme .three-constellation {
+  filter: hue-rotate(-35deg) saturate(1.2);
+}
+.baizhu-theme .chapter-heading h1 em,
+.baizhu-theme .chapter-description,
+.baizhu-theme .chapter-progress p > span,
+.baizhu-theme .star-label {
+  color: #d1f4b6;
+}
+.baizhu-theme .chapter-progress > p:first-child {
+  color: #a9ce98;
+}
+.baizhu-theme .progress-track > span {
+  background: #b6f080;
+  box-shadow: 0 0 12px #8bef6688;
+}
+.baizhu-theme .memory-list-arc path {
+  stroke: #a6e879;
+}
+.baizhu-theme .memory-index .memory-medallion {
+  border-color: #dbffad;
+  background: radial-gradient(circle, #315332, #142a20 70%);
+  box-shadow:
+    0 0 3px 1px #edffcb,
+    0 0 9px 3px #96ee69aa,
+    0 0 19px 5px #5bcc3d44,
+    inset 0 0 7px 1px #b1ee7388;
+}
+.baizhu-theme .memory-index .memory-row-copy strong {
+  color: #e4efda;
+}
+.baizhu-theme .memory-index .memory-row:hover,
+.baizhu-theme .memory-index .memory-row:focus-visible {
+  background: linear-gradient(90deg, #adee7722, transparent);
+}
+.baizhu-theme .star-focus-ring {
+  border-color: #d3ff9d;
+}
+.baizhu-theme .memory-sheet {
+  background: linear-gradient(130deg, #254531, #14291f);
+  border-color: #a8d58555;
+}
+.baizhu-theme .photo-area {
+  background: #0c1e15;
+}
+.baizhu-theme .personal-note {
+  color: #d0ddc7;
+}
+.baizhu-theme .round-button {
+  background: #17372477;
+  border-color: #b8df9044;
+}
+
+.yae-miko-theme {
+  --cream: #f6e5ff;
+  --muted: #c7aedb;
+  --gold: #d59dff;
+  --line: #ce88f52c;
+  background: radial-gradient(ellipse at 54% 76%, #4a2185, #170e31 78%);
+}
+.yae-miko-theme .three-sky,
+.yae-miko-theme .three-constellation {
+  filter: hue-rotate(105deg) saturate(1.05);
+}
+.yae-miko-theme .chapter-heading h1 em,
+.yae-miko-theme .chapter-description,
+.yae-miko-theme .chapter-progress p > span,
+.yae-miko-theme .star-label {
+  color: #f0ceff;
+}
+.yae-miko-theme .chapter-progress > p:first-child {
+  color: #c4a6d7;
+}
+.yae-miko-theme .progress-track > span {
+  background: #e1a5ff;
+  box-shadow: 0 0 12px #ce75f588;
+}
+.yae-miko-theme .memory-list-arc path {
+  stroke: #ce92ef;
+}
+.yae-miko-theme .memory-index .memory-medallion {
+  border-color: #f3d2ff;
+  background: radial-gradient(circle, #472c5a, #211733 70%);
+  box-shadow:
+    0 0 3px 1px #ffe5ff,
+    0 0 9px 3px #dc92ffaa,
+    0 0 19px 5px #a55ddd44,
+    inset 0 0 7px 1px #e3a5f788;
+}
+.yae-miko-theme .memory-index .memory-row-copy strong {
+  color: #eee0f5;
+}
+.yae-miko-theme .memory-index .memory-row:hover,
+.yae-miko-theme .memory-index .memory-row:focus-visible {
+  background: linear-gradient(90deg, #da99fa22, transparent);
+}
+.yae-miko-theme .star-focus-ring {
+  border-color: #efc2ff;
+}
+.yae-miko-theme .memory-sheet {
+  background: linear-gradient(130deg, #3a2552, #211832);
+  border-color: #d5a0ef55;
+}
+.yae-miko-theme .photo-area {
+  background: #170f28;
+}
+.yae-miko-theme .personal-note {
+  color: #ddcbe7;
+}
+.yae-miko-theme .round-button {
+  background: #31204877;
+  border-color: #d5a0ef44;
+}

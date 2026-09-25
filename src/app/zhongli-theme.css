@@ -1,0 +1,79 @@
+/* Geo palette keeps the same scene motion, controls, and accessible DOM targets. */
+.zhongli-theme {
+  --cream: #fff3d8;
+  --muted: #cdbc9b;
+  --gold: #e7c476;
+  --line: #d7ad6433;
+  background: radial-gradient(ellipse at 55% 85%, #806024, #241b19 78%);
+}
+.zhongli-theme .three-sky,
+.zhongli-theme .three-constellation {
+  filter: sepia(1) saturate(2.1) hue-rotate(350deg);
+}
+.zhongli-theme .chapter-heading h1 em,
+.zhongli-theme .chapter-description,
+.zhongli-theme .chapter-progress p > span,
+.zhongli-theme .star-label {
+  color: #f2dfae;
+}
+.zhongli-theme .chapter-description {
+  max-width: 280px;
+}
+.zhongli-theme .chapter-progress > p:first-child {
+  color: #cdbc9b;
+}
+.zhongli-theme .progress-track > span {
+  background: #ffe6a0;
+  box-shadow: 0 0 12px #eebf5788;
+}
+.zhongli-theme .memory-list-arc path {
+  stroke: #e6c276;
+}
+.zhongli-theme .memory-index .memory-medallion {
+  border-color: #fff2ad;
+  color: #f0e6ca;
+  background: radial-gradient(circle, #494029, #241e16 70%);
+  box-shadow:
+    0 0 3px 1px #fff2ba,
+    0 0 9px 3px #efcb66aa,
+    0 0 19px 5px #c9973443,
+    inset 0 0 7px 1px #f6d980;
+}
+.zhongli-theme .memory-index .memory-medallion::after {
+  border-color: #e7c47666;
+}
+.zhongli-theme .memory-index .memory-row-copy strong {
+  color: #e4dcc7;
+  text-shadow: 0 2px 3px #1c140f;
+}
+.zhongli-theme .memory-index .memory-row:hover,
+.zhongli-theme .memory-index .memory-row:focus-visible {
+  background: linear-gradient(90deg, #f6d98922, transparent);
+}
+.zhongli-theme .memory-index .memory-row:hover .memory-medallion,
+.zhongli-theme .memory-index .memory-row:focus-visible .memory-medallion {
+  box-shadow:
+    0 0 5px 2px #fff2ba,
+    0 0 24px 5px #efcb6699;
+}
+.zhongli-theme .star-focus-ring {
+  border-color: #ffe9a1;
+}
+.zhongli-theme .memory-sheet {
+  background: linear-gradient(130deg, #362c21, #201b17);
+  border-color: #d9bc8155;
+}
+.zhongli-theme .photo-area {
+  background: #1b1712;
+}
+.zhongli-theme .personal-note {
+  color: #d5c7ac;
+}
+.zhongli-theme .round-button {
+  background: #35291b55;
+  border-color: #d9bc8144;
+}
+.zhongli-theme .music-popover {
+  background: #251f19;
+  border-color: #d9bc8155;
+}
