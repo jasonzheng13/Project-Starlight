@@ -1,3 +1,4 @@
+import { enterConstellation } from "./enter-constellation";
 import { expect, test } from "@playwright/test";
 
 test("local effects decode, respond to controls, and mute independently of music", async ({
@@ -26,7 +27,7 @@ test("local effects decode, respond to controls, and mute independently of music
       });
     };
   });
-  await page.goto("/");
+  await enterConstellation(page);
   const starts = () =>
     page.evaluate(
       () => (window as unknown as { soundStarts: number }).soundStarts,
@@ -82,15 +83,15 @@ test("missing or invalid effects never block memory navigation", async ({
       body: "invalid audio",
     }),
   );
-  await page.goto("/");
+  await enterConstellation(page);
   await page
     .getByRole("button", { name: "Open memory 04:", exact: false })
     .click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByRole("button", { name: "Next", exact: false }).click();
-  await expect(
-    page.getByRole("heading", { name: "Memory 05", exact: true }),
-  ).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveAccessibleName(
+    "Year I, memory 05 gallery",
+  );
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
   expect(errors).toEqual([]);

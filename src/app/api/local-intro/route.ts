@@ -15,19 +15,12 @@ export async function GET(request: Request) {
   ) {
     return new Response(null, { status: 404 });
   }
-  const constellation =
-    new URL(request.url).searchParams.get("constellation") ?? "year-1";
-  const tracks: Record<string, string[]> = {
-    intro: ["sfx", "twilight-serenity.mp3"],
-    "year-2": ["liyue.mp3"],
-    "year-1": [
-      "sfx",
-      "City of Winds and Idylls - Disc 1 City of Winds and Idylls｜Genshin Impact.mp3",
-    ],
-  };
-  if (!Object.hasOwn(tracks, constellation))
-    return new Response(null, { status: 404 });
-  const filename = path.join(process.cwd(), "music", ...tracks[constellation]);
+  const filename = path.join(
+    process.cwd(),
+    "music",
+    "sfx",
+    "GENSHIN IMPACT _ CELESTIA DOOR _ LOADING SCREEN (1).mp4",
+  );
   let size: number;
   try {
     size = (await stat(filename)).size;
@@ -36,7 +29,7 @@ export async function GET(request: Request) {
   }
   if (!size) return new Response(null, { status: 404 });
   const headers = new Headers({
-    "Content-Type": "audio/mpeg",
+    "Content-Type": "video/mp4",
     "Accept-Ranges": "bytes",
     "Cache-Control": "private, no-store",
     "Cross-Origin-Resource-Policy": "same-origin",

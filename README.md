@@ -45,18 +45,18 @@ Playwright uses synthetic images for behavior tests. An additional local-only ch
 
 ## First slice: how the pieces connect
 
-- `src/features/memories/memories.ts`: stable IDs and draft captions. Visual positions belong to `chapter-art.ts`, keeping memory content independent of the constellation shape. `chapters.ts` binds year, quote, art, theme, photo placeholders, emblem names, and optional soundtrack for all five pages.
+- `src/features/memories/memories.ts`: stable memory IDs. Visual positions belong to `chapter-art.ts`, keeping memory content independent of the constellation shape. `chapters.ts` binds year, quote, art, theme, photo placeholders, emblem names, and optional soundtrack for all five pages.
 - `src/features/constellations/constellation-experience.tsx`: selected memory, overview navigation, and in-memory viewed IDs.
 - `src/features/constellations/space-scene.tsx`: Three.js rendering, animated teal nebula shader, layered particles, star flares, pointer parallax, and projected HTML hit targets. Reduced motion and pause freeze rendering; WebGL failure leaves memory navigation available.
 - `src/features/constellations/chapter-art.ts`: authored linework and six star anchors for all five character references. Each star opens the matching year-specific memory.
 - `src/features/constellations/mascot-brand.tsx`: selected Cat B, audio playback state, and accessible volume popover. Assets and edit prompts are documented in [the mascot notes](doc/11-mascot-assets.md).
 - `src/app/jean-theme.css` and `src/app/character-themes.css`: each character's palette and shared layout styling. The left panel uses the user's supplied quote; the bottom footer and decorative captions are removed.
 - `src/app/constellation-menu.css` and `src/features/constellations/memory-emblem.tsx`: reference-informed curved right-side menu, the original game emblems, and hover/focus/viewed styling. Memory selection still uses the same stable IDs.
-- `src/features/memories/memory-viewer.tsx`: native dialog, photo loading/error/retry, enlargement, and previous/next controls.
+- `src/features/memories/memory-viewer.tsx`: native dialog gallery, isolated photo focus, loading/error/retry, and previous/next controls.
 - `src/app/api/local-media/[id]/route.ts`: development-only filesystem adapter, to be replaced with authorized storage access.
 - `tests/constellation.spec.ts`: behavior checks for navigation, failures, stale requests, focus, and responsive/reduced-motion behavior.
 
-Clicking a star selects its ID. The viewer requests that ID's photo; a successful load adds the ID to the viewed set. The scene derives illumination from that set, so reopening a memory never double-counts it. Reloading clears this session-only state. Years II–V placeholders do not request photos or increase progress. Switching between chapters previews a 2.4-second white loading screen with seven elemental emblems disappearing and returning; reduced motion or paused sky skips it. Visual review and the next implementation task follow the user’s priorities.
+Clicking a star selects its ID. The viewer looks up that moment’s photo list in `gallery-photos.ts`. Successfully opening a full photo adds the memory ID to the viewed set; loading thumbnails or opening empty preview slots does not. The scene derives illumination from that set, so reopening a memory never double-counts it. Reloading clears this session-only state. Years II–V placeholders do not request photos or increase progress. Switching between chapters previews a 2.4-second white loading screen with seven elemental emblems disappearing and returning; reduced motion or paused sky skips it. Visual review and the next implementation task follow the user’s priorities.
 
 ## Start here
 
@@ -82,3 +82,27 @@ Read [the master specification](doc/00-master-spec.md), then follow [the build p
 Use a short master document plus focused feature specs. Keep requirements in their owning file and link to them rather than copying them everywhere. Markdown keeps the documents readable in a code editor and easy to review alongside code changes.
 
 When a meaningful decision changes, update the affected spec and record why in the decision log. A small project does not need a large approval process. The original research is background; the user's later choices are the basis for this plan.
+
+## Preparing gallery photos
+
+Each star opens one moment with its own photo list in `src/features/memories/gallery-photos.ts`. The six decorative empty cards are preview slots, not a six-photo limit. Existing photos remain in their separate moments until you choose their final grouping. Captions are not displayed.
+
+To add a picture:
+
+1. Keep its file under `pictures/first_year/` for the current local adapter.
+2. Add a unique photo ID and filename to the explicit `files` allowlist in `src/app/api/local-media/[id]/route.ts`. The adapter currently serves PNG files.
+3. Append `{ id: "your-photo-id", alt: "An accurate description" }` to the appropriate memory’s array in `gallery-photos.ts`. Array order is display order. Multiple photo IDs can belong to the same moment.
+
+For other folders or formats, extend the server’s explicit mapping and MIME handling; never accept a browser-supplied filesystem path. Development mode and `LOCAL_PRIVATE_MEDIA=true` remain required. Thumbnail cards currently load the originals; image derivatives are future work.
+
+Click a card to isolate it, use arrow keys or the round arrows to browse, and press Escape to return to the grid. A second Escape closes the gallery. Empty slots preview the same interaction without requesting a missing file or illuminating a star.
+
+## 1080p video entrance
+
+The entrance uses the user's replacement `music/sfx/GENSHIN IMPACT _ CELESTIA DOOR _ LOADING SCREEN (1).mp4`, verified at 1920×1080 and approximately 17 seconds. The Three.js recreation was removed at the user's request. The recording keeps its original proportions, with the bottom 8% clipped to remove the account text and version number; other viewport shapes receive letterboxing. The remaining recorded game UI stays visible. Only the overlaid Start Game hit target is interactive; recorded controls are part of the footage.
+
+Provisional timing is centralized in `src/features/intro/intro-timing.ts`: loop the cursor-free 0.15–1.05 second section at half speed with a brief dissolve on rewind, restore normal speed and continue the remaining clip on Start, and reveal Jean at 15.7 seconds. The loading segment currently remains in the clip, pending the user's requested cut points. Source footage is not modified. The real button overlays the recorded Start Game label to avoid duplicate text and retains a keyboard focus outline.
+
+`/api/local-intro` serves the fixed filename with bounded byte ranges under the development/loopback/`LOCAL_PRIVATE_MEDIA=true` gate. No video moves into public assets. Playback is muted; constellation music starts after entry. Reduced motion pauses on a still frame and enters immediately. Playback failure preserves entry; a 20-second timeout bounds stalls. Reloading returns to the entrance.
+
+The entrance now plays Twilight Serenity independently of the scenery loop, then switches to the recording's audio at the door sequence (12 seconds). Start has a preloaded button sound. Browsers that block audible autoplay require a click or keypress before music starts. Intro audio stops before the first constellation mounts; all sources retain the development-only local-media gate. See `music/sfx/INTRO-SOURCES.md` for provenance.

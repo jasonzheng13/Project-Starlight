@@ -169,3 +169,12 @@
     transition: none;
   }
 }
+
+/* With labels removed, anchor the compact emblem arc near the right edge. */
+@media (min-width: 901px) {
+  .memory-index {
+    width: 128px;
+    justify-self: end;
+    margin-right: 20px;
+  }
+}

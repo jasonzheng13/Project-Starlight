@@ -4,6 +4,14 @@
 
 Every star opens a chosen memory quickly, with a photo or video and a personal note. The import workflow lets the developer prepare content without spending the anniversary window building an admin dashboard.
 
+## Current gallery preview (September 26)
+
+Each of the thirty memory stars opens a gallery for one moment. `gallery-photos.ts` owns ordered photo IDs and accessible descriptions; the local media route owns the filesystem allowlist. Existing first-year photos remain in their original separate moments. Empty moments show six word-free ornamental preview cards, and longer photo arrays expand the grid. No captions or personal messages are supplied or displayed by the gallery.
+
+A card opens a separate focused view with the full image contained without cropping. The grid is removed from keyboard navigation while focused. Escape returns focus to the selected card; another Escape returns to the opening star or emblem. Full-photo load success illuminates the memory once per session; thumbnails, missing files, and empty previews do not. Failures expose an icon retry control with an accessible name. Reduced motion and paused sky disable gallery animations.
+
+The following importer/video requirements remain proposed; the local preview currently supports PNG photos through its development-only route. The user has authorized tracking development photos and music in the private repository; see the current private-data rules.
+
 ## Content preparation
 
 Start with five key memories per year. For each, supply a stable ID, year, title, note, optional date, local media path, and order. Select a cover image for videos. Notes should answer a personal question such as what the developer remembers, appreciates, or noticed about her in that moment.

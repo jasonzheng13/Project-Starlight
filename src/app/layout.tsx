@@ -7,6 +7,8 @@ import "./constellation-menu.css";
 import "./zhongli-theme.css";
 import "./chapter-transition.css";
 import "./character-themes.css";
+import "./gallery.css";
+import "./start-screen.css";
 
 export const metadata: Metadata = {
   title: "Starlight · Our constellation",

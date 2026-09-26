@@ -1,5 +1,5 @@
-import { ConstellationExperience } from "@/features/constellations/constellation-experience";
+import { StartScreen } from "@/features/intro/start-screen";
 
 export default function Home() {
-  return <ConstellationExperience />;
+  return <StartScreen />;
 }

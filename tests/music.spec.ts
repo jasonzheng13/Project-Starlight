@@ -1,4 +1,5 @@
-﻿import { expect, test } from "@playwright/test";
+import { enterConstellation } from "./enter-constellation";
+import { expect, test } from "@playwright/test";
 
 // A generated silent WAV tests actual browser decoding without shipping OST audio.
 function silentWav() {
@@ -24,7 +25,7 @@ test("cat B controls real audio playback, keyboard volume, mute, pause and dismi
   await page.route("**/api/local-music*", (route) =>
     route.fulfill({ contentType: "audio/wav", body: silentWav() }),
   );
-  await page.goto("/");
+  await enterConstellation(page);
   await expect(page.locator(".cat-mascot")).toHaveAttribute("src", /cat-b/);
   await expect(page.getByRole("button", { name: "Preview cat A" })).toHaveCount(
     0,
@@ -71,14 +72,14 @@ test("cat B controls real audio playback, keyboard volume, mute, pause and dismi
   await expect(panel).toHaveCount(0);
 });
 
-test("each constellation owns its soundtrack and the overview is silent", async ({
+test("each constellation owns its soundtrack and chapters without tracks are silent", async ({
   page,
   request,
 }) => {
   await page.route("**/api/local-music*", (route) =>
     route.fulfill({ contentType: "audio/wav", body: silentWav() }),
   );
-  await page.goto("/");
+  await enterConstellation(page);
   await page.getByRole("button", { name: "Music volume controls" }).click();
   const audio = page.locator("audio");
   await expect(audio).toHaveAttribute(
@@ -86,12 +87,14 @@ test("each constellation owns its soundtrack and the overview is silent", async 
     "/api/local-music?constellation=year-1",
   );
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Our universe" }).click();
+  await page.getByRole("button", { name: "Year III", exact: true }).click();
+  await expect(page.locator(".chapter-transition")).toHaveCount(0);
   await expect(audio).not.toHaveAttribute("src");
   expect(
     await audio.evaluate((element: HTMLAudioElement) => element.paused),
   ).toBe(true);
-  await page.getByRole("button", { name: /Explore 6 memories/ }).click();
+  await page.getByRole("button", { name: "Year I", exact: true }).click();
+  await expect(page.locator(".chapter-transition")).toHaveCount(0);
   await expect(audio).toHaveAttribute(
     "src",
     "/api/local-music?constellation=year-1",
@@ -122,7 +125,7 @@ test("blocked autoplay retries when the cat is clicked", async ({ page }) => {
       return original.call(this);
     };
   });
-  await page.goto("/");
+  await enterConstellation(page);
   await page.getByRole("button", { name: "Music volume controls" }).click();
   await expect(
     page.getByRole("region", { name: "Music controls" }),
@@ -136,7 +139,7 @@ test("missing soundtrack is recoverable and volume panel fits mobile", async ({
     route.fulfill({ status: 404 }),
   );
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await enterConstellation(page);
   await page.getByRole("button", { name: "Music volume controls" }).click();
   await expect(
     page.getByRole("region", { name: "Music controls" }),

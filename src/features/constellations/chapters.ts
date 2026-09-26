@@ -1,3 +1,4 @@
+import { type GalleryRegion } from "../memories/gallery-regions";
 import {
   baizhuArt,
   jeanArt,
@@ -21,6 +22,7 @@ export type Chapter = {
   accent: string;
   quote: string;
   theme: string;
+  region: GalleryRegion;
   art: ChapterArt;
   memories: readonly Memory[];
   emblems: readonly string[];
@@ -67,6 +69,7 @@ export const chapters: readonly Chapter[] = [
     id: "year-1",
     year: "I",
     name: "Jean",
+    region: "mondstadt",
     heading: "Where we",
     accent: "began.",
     quote:
@@ -84,6 +87,7 @@ export const chapters: readonly Chapter[] = [
     id: "year-2",
     year: "II",
     name: "Zhongli",
+    region: "liyue",
     heading: "Where memories",
     accent: "endure.",
     quote:
@@ -101,6 +105,7 @@ export const chapters: readonly Chapter[] = [
     id: "year-3",
     year: "III",
     name: "Neuvillette",
+    region: "fontaine",
     heading: "The tide",
     accent: "remembers.",
     quote:
@@ -115,6 +120,7 @@ export const chapters: readonly Chapter[] = [
     id: "year-4",
     year: "IV",
     name: "Baizhu",
+    region: "liyue",
     heading: "A gentler",
     accent: "remedy.",
     quote:
@@ -129,6 +135,7 @@ export const chapters: readonly Chapter[] = [
     id: "year-5",
     year: "V",
     name: "Yae Miko",
+    region: "inazuma",
     heading: "A little",
     accent: "mischief.",
     quote: "People show you whatever side of themselves they want you to see.",

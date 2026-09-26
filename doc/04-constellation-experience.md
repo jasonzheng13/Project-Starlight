@@ -50,3 +50,35 @@ Build one constellation with three real memories and representative art, movemen
 ## Done when
 
 A person unfamiliar with the controls can open a memory, return, and change years; the same actions work from the alternative list; failed graphics do not hide the story; replacing a symbol requires content/art changes rather than rewriting navigation.
+
+## September 26 gallery revision
+
+All five chapters use the gallery behavior owned by [content and media](03-content-and-media.md#current-gallery-preview-september-26). Right-side emblems retain their curved placement, accessible labels, effects, and focus states; visible labels are removed. Existing left quotes are unchanged.
+
+The gallery adapts the framed-card and ornamental menu treatment seen in [Genshin's Archive and Character Archive references](https://interfaceingame.com/games/genshin-impact-mobile/). Staggered card entrances, subtle hover lift, and a short photo reveal are original CSS animations inspired by that presentation, not captured game animations. Numeric coordinates and icon controls keep personal writing space blank.
+
+## September 26 regional gallery refinement
+
+The user's later reference supersedes the dark archive grid. Center a cream ornamental banner reading “Memory 1” through “Memory 6” over a bright blurred regional screenshot. Translucent empty cards reveal the scenery; populated cards keep their photos opaque. Jean uses Mondstadt, Zhongli and Baizhu use Liyue (Baizhu with a jade tint), Neuvillette uses Fontaine, and Yae Miko uses Inazuma's Sacred Sakura. [Region roster reference](https://bannerhistory.app/en/genshin-region-roster); [scenery provenance](../public/images/regions/SOURCES.md).
+
+`chapters.ts` owns the character-to-region assignment and `gallery-regions.ts` maps regions to local decorative assets. The shared viewer receives this configuration and a tint override. Missing decorative images fall back to a bright gradient; memory media stays behind the development-only private endpoint. Focused photos keep their dark isolated presentation. No additional personal copy is introduced.
+
+## September 26 video entrance trial
+
+Replace the overview/back-to-universe flow with the supplied Celestia bridge recording and one Start Game action. The default route opens the entrance; chapter tabs remain available after entering Jean. Reloading returns to the entrance. No additional game account/server controls are introduced.
+
+For the uploaded 640×360 sunset recording, use 8.8–11.4 seconds for the moving bridge wait with a captured-frame dissolve over the seek. Start continues from the current bridge position through door formation and opening. At 15.65 seconds, mount the constellation under a 900ms white reveal. Crop the video's baked-in edge controls and lower text using a shared video/canvas viewport. The footage's low resolution and repeated camera motion remain visible trial limitations; this is not a reconstructed scene.
+
+Keep the clip muted and stop it before mounting constellation music. Respect reduced motion with a paused door frame at 13.15 seconds and immediate entry. Permit entry before media finishes loading or when playback fails; bound a stalled entrance with a 10-second fallback. The local video endpoint owns the fixed filename and byte-range validation, and rejects production or non-loopback access. An authored replacement remains conditional on the user's review.
+
+## September 26 authored entrance (supersedes video trial)
+
+The user rejected the low-resolution recording and selected a reconstruction. The runtime now uses original Three.js geometry and procedural sky/cloud effects, with a blue daytime palette based on the supplied screenshot. Retain the clip only as a reference; remove the local intro streaming endpoint.
+
+The camera approaches along the bridge and eases toward the closed door without looping a recording. Start animates two hinged leaves and moves through the portal over approximately 5.3 seconds, then reveals Jean. A late-frame white veil joins the scene to the existing handoff. Keep only Start Game visible on the home screen. Use a static door and immediate handoff for reduced motion, a CSS architectural fallback if WebGL fails, and an 8.5-second safety timeout if the entrance stalls.
+
+The canvas follows viewport size with capped device pixel ratio (1.75). Reuse pillar geometry through instancing, batch stationary paving, cache stationary shadows, pause drawing in hidden tabs, and dispose geometry, materials, textures, shadow targets, renderer and instanced buffers on unmount. This is an original approximation, not extracted game artwork or a claim of pixel-exact reproduction. Runtime quality and GPU cost need review on the intended presentation computer.
+
+September 26, 1080p video revision (supersedes authored entrance): user rejected the reconstruction and supplied `GENSHIN IMPACT _ CELESTIA DOOR _ LOADING SCREEN (1).mp4`. Verified 1920×1080, 17.04 seconds. Restore local byte-range video playback and remove the custom scene. Preserve all recorded UI and the complete 16:9 frame, with letterboxing when needed. Use a transparent accessible button over the recorded Start Game label. Provisional loop: 0.15–2.65 seconds with a dissolve at rewind; Start continues to the door flare at 15.7 seconds, including the existing loading sequence. Keep edit points in `intro-timing.ts` pending the user's cut instructions. Keep reduced-motion, playback failure, timeout and focus handoff behavior. The file remains untouched.
+
+September 26 loop correction: inspected opening frames and found the cursor visible by 1.5 seconds and the recorded click by 2.1 seconds. Limit idle playback to 0.15–1.05 seconds at 0.5× speed, with a dissolve over the seek and normal speed restored on Start. Crop the bottom 8% in both video and dissolve layers to remove account/version text, and realign the Start hit target. The source file stays unchanged. This supersedes the earlier uncropped 2.65-second loop.

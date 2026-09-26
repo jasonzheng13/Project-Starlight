@@ -1,3 +1,4 @@
+import { enterConstellation } from "./enter-constellation";
 import { expect, test } from "@playwright/test";
 
 test("Zhongli placeholders, emblems, music and chapter progress stay separate", async ({
@@ -14,18 +15,19 @@ test("Zhongli placeholders, emblems, music and chapter progress stay separate", 
       body: '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="gold"/></svg>',
     }),
   );
-  await page.goto("/");
+  await enterConstellation(page);
   await page.locator(".memory-row").first().click();
-  await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
+  await page
+    .getByRole("button", { name: "Enlarge photo 1", exact: true })
+    .click();
+  await expect(page.locator(".gallery-photo")).toHaveClass(/ready/);
   await page.getByRole("button", { name: "Close memory" }).click();
   await page.getByRole("button", { name: "Year II", exact: true }).click();
   await expect(page.locator(".chapter-description")).toHaveText(
     "Osmanthus wine tastes the same as I remember... But where are those who share the memory?",
   );
-  await expect(page.locator(".chapter-progress > p > span")).toHaveText("00");
-  await expect(page.locator(".memory-row").first()).toContainText(
-    "Rock, the Backbone of Earth",
-  );
+  await expect(page.locator(".memory-star.is-viewed")).toHaveCount(0);
+  await expect(page.locator(".memory-row").first()).toHaveText("");
   await expect(page.locator("audio")).toHaveAttribute(
     "src",
     "/api/local-music?constellation=year-2",
@@ -33,19 +35,17 @@ test("Zhongli placeholders, emblems, music and chapter progress stay separate", 
   await expect(page.locator(".chapter-transition")).toHaveCount(0);
   for (let i = 0; i < 6; i++) {
     await page.locator(".memory-row").nth(i).click();
+    await expect(page.locator(".gallery-empty")).toHaveCount(6);
     await expect(
-      page.getByRole("heading", { name: "A memory waiting to be added." }),
+      page.getByRole("heading", { name: `Memory ${i + 1}`, exact: true }),
     ).toBeVisible();
-    await expect(page.locator(".memory-copy .eyebrow")).toContainText(
-      "YEAR II",
-    );
-    await expect(page.locator(".memory-photo")).toHaveCount(0);
+    await expect(page.locator(".gallery-photo")).toHaveCount(0);
     await page.keyboard.press("Escape");
     await expect(page.locator(".memory-row").nth(i)).toBeFocused();
   }
   await page.locator(".memory-row").first().click();
-  await page.getByRole("button", { name: "← Previous" }).click();
-  await expect(page.locator(".viewer-navigation")).toContainText("06 / 06");
+  await page.getByRole("button", { name: "Previous memory" }).click();
+  await expect(page.locator(".gallery-footer")).toContainText("06 / 06");
   await page.keyboard.press("Escape");
   expect(requests).toEqual([]);
   await page.screenshot({ path: ".local/zhongli-desktop.png", fullPage: true });
@@ -57,13 +57,13 @@ test("Zhongli placeholders, emblems, music and chapter progress stay separate", 
   ).toBe(true);
   await page.screenshot({ path: ".local/zhongli-mobile.png", fullPage: true });
   await page.getByRole("button", { name: "Year I", exact: true }).click();
-  await expect(page.locator(".chapter-progress > p > span")).toHaveText("01");
+  await expect(page.locator(".memory-star.is-viewed")).toHaveCount(1);
 });
 
 test("element loading transition reveals the next chapter and resets for the return", async ({
   page,
 }) => {
-  await page.goto("/");
+  await enterConstellation(page);
   await page.getByRole("button", { name: "Year II", exact: true }).click();
   await expect(page.locator(".chapter-transition")).toBeVisible();
   await expect(page.locator(".loading-element")).toHaveCount(7);
@@ -114,7 +114,7 @@ test("element loading transition reveals the next chapter and resets for the ret
   await expect(page.locator(".chapter-transition")).toHaveCount(0);
 });
 
-test("Zhongli stars remain usable without WebGL and the overview restores chapter focus", async ({
+test("Zhongli stars remain usable without WebGL and chapter navigation preserves focus", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -132,11 +132,8 @@ test("Zhongli stars remain usable without WebGL and the overview restores chapte
       },
     });
   });
-  await page.goto("/");
-  await page.getByRole("button", { name: "Our universe" }).click();
-  await page
-    .getByRole("button", { name: /YEAR II Where memories endure/ })
-    .click();
+  await enterConstellation(page);
+  await page.getByRole("button", { name: "Year II", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Year II", exact: true }),
   ).toBeFocused();
@@ -147,9 +144,7 @@ test("Zhongli stars remain usable without WebGL and the overview restores chapte
   await page.locator(".memory-star").first().focus();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("dialog")).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "A memory waiting to be added." }),
-  ).toBeVisible();
+  await expect(page.locator(".gallery-empty")).toHaveCount(6);
   await page.keyboard.press("Escape");
   await expect(page.locator(".memory-star").first()).toBeFocused();
 });

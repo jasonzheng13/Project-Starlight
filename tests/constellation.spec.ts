@@ -1,3 +1,4 @@
+import { enterConstellation } from "./enter-constellation";
 import { expect, test, type Page } from "@playwright/test";
 import { existsSync } from "node:fs";
 
@@ -14,22 +15,21 @@ test("six star targets open six distinct memories and navigation wraps", async (
 }) => {
   await mockPhotos(page);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await enterConstellation(page);
   await expect(page.locator(".memory-star")).toHaveCount(6);
   for (let index = 0; index < 6; index++) {
     await page.locator(".memory-star").nth(index).click();
-    await expect(page.locator(".memory-photo")).toHaveAttribute(
-      "src",
-      new RegExp(`year-1-memory-${index + 1}\\?`),
+    await expect(page.getByRole("dialog")).toHaveAccessibleName(
+      `Year I, memory ${String(index + 1).padStart(2, "0")} gallery`,
     );
-    await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
+    await expect(page.locator(".gallery-tile")).toHaveCount(6);
     await page.getByRole("button", { name: "Close memory" }).click();
   }
   await page.locator(".memory-star").first().click();
-  await page.getByRole("button", { name: "← Previous" }).click();
-  await expect(page.locator(".viewer-navigation")).toContainText("06 / 06");
-  await page.getByRole("button", { name: "Next →" }).click();
-  await expect(page.locator(".viewer-navigation")).toContainText("01 / 06");
+  await page.getByRole("button", { name: "Previous memory" }).click();
+  await expect(page.locator(".gallery-footer")).toContainText("06 / 06");
+  await page.getByRole("button", { name: "Next memory" }).click();
+  await expect(page.locator(".gallery-footer")).toContainText("01 / 06");
 });
 
 test("unfilled memories explain missing content without illuminating", async ({
@@ -38,12 +38,10 @@ test("unfilled memories explain missing content without illuminating", async ({
   await page.route("**/api/local-media/year-1-memory-4**", (route) =>
     route.fulfill({ status: 404 }),
   );
-  await page.goto("/");
+  await enterConstellation(page);
   await page.locator(".memory-row").nth(3).click();
-  await expect(
-    page.getByRole("heading", { name: "A memory waiting to be added." }),
-  ).toBeVisible();
-  await expect(page.locator(".chapter-progress > p > span")).toHaveText("00");
+  await expect(page.locator(".gallery-empty")).toHaveCount(6);
+  await expect(page.locator(".memory-star.is-viewed")).toHaveCount(0);
 });
 
 test("Three.js renders without shader errors and the pause control freezes the sky", async ({
@@ -58,7 +56,7 @@ test("Three.js renders without shader errors and the pause control freezes the s
     )
       errors.push(message.text());
   });
-  await page.goto("/");
+  await enterConstellation(page);
   await expect(page.locator(".three-sky")).toHaveAttribute(
     "data-state",
     "ready",
@@ -119,13 +117,13 @@ test("memory list and stars remain usable when WebGL cannot initialize", async (
     });
   });
   await mockPhotos(page);
-  await page.goto("/");
+  await enterConstellation(page);
   await expect(page.locator(".three-constellation")).toHaveAttribute(
     "data-state",
     "fallback",
   );
   await page.locator(".memory-row").first().click();
-  await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
+  await expect(page.locator(".gallery-photo")).toHaveClass(/ready/);
   await page.getByRole("button", { name: "Close memory" }).click();
   await page
     .getByRole("button", { name: "Open memory 01: The first little spark" })
@@ -137,28 +135,28 @@ test("stars open memories; next, previous, Escape and focus restoration work", a
   page,
 }) => {
   await mockPhotos(page);
-  await page.goto("/");
+  await enterConstellation(page);
   const star = page.getByRole("button", {
     name: "Open memory 01: The first little spark",
   });
   await star.focus();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("dialog")).toBeVisible();
-  await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
-  await page.getByRole("button", { name: "Next →" }).click();
-  await expect(
-    page.getByRole("heading", { name: "A moment, kept forever" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "← Previous" }).click();
-  await expect(
-    page.getByRole("heading", { name: "The first little spark" }),
-  ).toBeVisible();
+  await expect(page.locator(".gallery-photo")).toHaveClass(/ready/);
+  await page.getByRole("button", { name: "Next memory" }).click();
+  await expect(page.getByRole("dialog")).toHaveAccessibleName(
+    "Year I, memory 02 gallery",
+  );
+  await page.getByRole("button", { name: "Previous memory" }).click();
+  await expect(page.getByRole("dialog")).toHaveAccessibleName(
+    "Year I, memory 01 gallery",
+  );
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(star).toBeFocused();
 });
 
-test("failed photos preserve text and navigation; retry illuminates only once", async ({
+test("failed photos preserve navigation; retry illuminates only once", async ({
   page,
 }) => {
   let fail = true;
@@ -167,25 +165,28 @@ test("failed photos preserve text and navigation; retry illuminates only once", 
       ? route.fulfill({ status: 404 })
       : route.fulfill({ contentType: "image/svg+xml", body: syntheticPhoto }),
   );
-  await page.goto("/");
+  await enterConstellation(page);
   await page
     .getByRole("button", { name: "Open memory 01: The first little spark" })
     .click();
-  await expect(page.getByRole("dialog").getByRole("alert")).toContainText(
-    "The photo couldn’t open",
-  );
-  await expect(page.getByText("DRAFT CAPTION")).toBeVisible();
-  await expect(page.locator(".chapter-progress > p > span")).toHaveText("00");
+  await page
+    .getByRole("button", { name: "Enlarge photo 1", exact: true })
+    .click();
+  await expect(
+    page.getByRole("dialog").getByRole("alert"),
+  ).toHaveAccessibleName("Photo unavailable");
+  await expect(page.getByText("DRAFT CAPTION")).toHaveCount(0);
+  await expect(page.locator(".memory-star.is-viewed")).toHaveCount(0);
   fail = false;
-  await page.getByRole("button", { name: "Try again" }).click();
-  await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
+  await page.getByRole("button", { name: "Retry photo" }).click();
+  await expect(page.locator(".gallery-photo")).toHaveClass(/ready/);
   await page.getByRole("button", { name: "Close memory" }).click();
-  await expect(page.locator(".chapter-progress > p > span")).toHaveText("01");
+  await expect(page.locator(".memory-star.is-viewed")).toHaveCount(1);
   await page
     .getByRole("button", { name: "Open memory 01: The first little spark" })
     .click();
-  await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
-  await expect(page.locator(".chapter-progress > p > span")).toHaveText("01");
+  await expect(page.locator(".gallery-photo")).toHaveClass(/ready/);
+  await expect(page.locator(".memory-star.is-viewed")).toHaveCount(1);
 });
 
 test("a delayed previous photo cannot replace the latest selection", async ({
@@ -198,49 +199,51 @@ test("a delayed previous photo cannot replace the latest selection", async ({
       .fulfill({ contentType: "image/svg+xml", body: syntheticPhoto })
       .catch(() => {});
   });
-  await page.goto("/");
+  await enterConstellation(page);
   await page
     .getByRole("button", { name: "Open memory 01: The first little spark" })
     .click();
-  await page.getByRole("button", { name: "Next →" }).click();
-  await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
-  await expect(page.locator(".memory-photo")).toHaveAttribute(
+  await page.getByRole("button", { name: "Next memory" }).click();
+  await expect(page.locator(".gallery-photo")).toHaveClass(/ready/);
+  await expect(page.locator(".gallery-photo")).toHaveAttribute(
     "src",
     /memory-2/,
   );
   await page.waitForTimeout(900);
   await expect(page.getByRole("dialog")).toHaveAccessibleName(
-    "A moment, kept forever",
+    "Year I, memory 02 gallery",
   );
 });
 
-test("all six memories illuminate; overview and list remain usable", async ({
+test("only supplied photos illuminate; progress remains session only", async ({
   page,
 }) => {
   await mockPhotos(page);
-  await page.goto("/");
-  for (let index = 0; index < 6; index++) {
+  await enterConstellation(page);
+  for (let index = 0; index < 3; index++) {
     await page.locator(".memory-row").nth(index).click();
-    await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
+    await page
+      .getByRole("button", { name: "Enlarge photo 1", exact: true })
+      .click();
+    await expect(page.locator(".gallery-photo")).toHaveClass(/ready/);
     await page.getByRole("button", { name: "Close memory" }).click();
   }
-  await expect(
-    page.getByText("Our first constellation, shining together."),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Our universe" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Written in the stars." }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: /YEAR I Where we began/ }).click();
-  await expect(page.locator(".chapter-progress > p > span")).toHaveText("06");
+  await expect(page.locator(".memory-star.is-viewed")).toHaveCount(3);
+  await page.getByRole("button", { name: "Year II", exact: true }).click();
+  await expect(page.locator(".chapter-transition")).toHaveCount(0);
+  await page.getByRole("button", { name: "Year I", exact: true }).click();
+  await expect(page.locator(".chapter-transition")).toHaveCount(0);
+  await expect(page.locator(".memory-star.is-viewed")).toHaveCount(3);
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.reload();
-  await expect(page.locator(".chapter-progress > p > span")).toHaveText("00");
+  await page.getByRole("button", { name: "Start Game", exact: true }).click();
+  await expect(page.locator(".memory-star.is-viewed")).toHaveCount(0);
 });
 
 test("responsive layout and reduced motion", async ({ page }) => {
   await mockPhotos(page);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await enterConstellation(page);
   await expect(page.locator(".three-constellation")).toHaveAttribute(
     "data-state",
     "ready",
@@ -264,7 +267,7 @@ test("responsive layout and reduced motion", async ({ page }) => {
   ).toBe(true);
   await page.screenshot({ path: ".local/mobile-preview.png", fullPage: true });
   await page.locator(".memory-row").first().click();
-  await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
+  await expect(page.locator(".gallery-photo")).toHaveClass(/ready/);
   await page.screenshot({ path: ".local/mobile-viewer.png", fullPage: true });
 });
 
@@ -294,15 +297,18 @@ test("supplied local photos decode and display without cropping", async ({
       process.env.CI === "true",
     "Private local photos are optional and never required in CI.",
   );
-  await page.goto("/");
+  await enterConstellation(page);
   for (let index = 0; index < 3; index++) {
     await page.locator(".memory-row").nth(index).click();
-    await expect(page.locator(".memory-photo")).toHaveClass(/ready/);
-    await expect(page.locator(".memory-photo")).toHaveCSS(
+    await page
+      .getByRole("button", { name: "Enlarge photo 1", exact: true })
+      .click();
+    await expect(page.locator(".gallery-photo")).toHaveClass(/ready/);
+    await expect(page.locator(".gallery-photo")).toHaveCSS(
       "object-fit",
       "contain",
     );
-    await expect(page.locator(".memory-photo")).toHaveCSS("opacity", "1");
+    await expect(page.locator(".gallery-photo")).toHaveCSS("opacity", "1");
     await page.screenshot({ path: `.local/local-memory-${index + 1}.png` });
     await page.getByRole("button", { name: "Close memory" }).click();
   }

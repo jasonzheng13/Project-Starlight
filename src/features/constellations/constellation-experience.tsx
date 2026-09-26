@@ -9,7 +9,6 @@ import {
 import { MascotBrand } from "./mascot-brand";
 import { MemoryEmblem } from "./memory-emblem";
 import { MemoryViewer } from "../memories/memory-viewer";
-import { StarIcon } from "./star-icon";
 import { SpaceScene } from "./space-scene";
 import { chapters } from "./chapters";
 import { useUiSounds } from "../audio/ui-sounds";
@@ -27,7 +26,6 @@ export function ConstellationExperience() {
   const [selected, setSelected] = useState<string | null>(null);
   const [allViewed, setViewed] = useState<string[]>([]);
   const viewed = allViewed.filter((id) => id.startsWith(`${chapterId}-`));
-  const [overview, setOverview] = useState(false);
   const [motion, setMotion] = useState(true);
   const [fullscreen, setFullscreen] = useState(false);
   const [notice, setNotice] = useState("");
@@ -59,18 +57,9 @@ export function ConstellationExperience() {
     const reveal = () => {
       setSelected(null);
       setChapterIndex(index);
-      setOverview(false);
-      if (overview)
-        requestAnimationFrame(() => {
-          document
-            .querySelector<HTMLButtonElement>(
-              `.chapter-navigation button:nth-child(${index + 1})`,
-            )
-            ?.focus();
-        });
     };
     if (
-      (index === chapterIndex && !overview) ||
+      index === chapterIndex ||
       !motion ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
@@ -128,21 +117,15 @@ export function ConstellationExperience() {
       <SpaceScene motion={motion} viewed={viewed} />
       <ChapterTransition active={transitioning} />
       <header className="site-header">
-        <MascotBrand soundtrack={overview ? null : chapter.soundtrack} />
+        <MascotBrand soundtrack={chapter.soundtrack} />
         <nav className="chapter-navigation" aria-label="Years together">
           {chapters.map((chapter, index) => (
             <button
               data-sound="change"
               key={chapter.id}
               aria-disabled={transitioning}
-              aria-current={
-                index === chapterIndex && !overview ? "page" : undefined
-              }
-              className={
-                index === chapterIndex && !overview
-                  ? "chapter active"
-                  : "chapter"
-              }
+              aria-current={index === chapterIndex ? "page" : undefined}
+              className={index === chapterIndex ? "chapter active" : "chapter"}
               onClick={() => changeChapter(index)}
               aria-label={`Year ${chapter.year}`}
             >
@@ -170,153 +153,94 @@ export function ConstellationExperience() {
         </div>
       </header>
 
-      {overview ? (
-        <section className="overview">
-          <p className="eyebrow">FIVE CHAPTERS · ONE LITTLE UNIVERSE</p>
-          <h1>Written in the stars.</h1>
-          <p>Every year, another constellation. Every star, a moment of us.</p>
-          <div className="overview-chapters">
-            {chapters.map((chapter, index) => (
+      <>
+        <aside className="chapter-intro">
+          <div className="chapter-heading">
+            <p className="eyebrow">
+              YEAR {chapter.year} · {chapter.name.toUpperCase()}
+            </p>
+            <h1>
+              {chapter.heading}
+              <br />
+              <em>{chapter.accent}</em>
+            </h1>
+            <div className="chapter-rule">
+              <span />✧<span />
+            </div>
+            <p className="chapter-description">{chapter.quote}</p>
+            <span className="year-label">
+              YEAR {chapter.year} <span>·</span> {chapter.name.toUpperCase()}
+            </span>
+          </div>
+        </aside>
+
+        <section
+          className="constellation-stage"
+          aria-label={`Year ${chapter.year} constellation`}
+        >
+          <div className="constellation-map">
+            <SpaceScene
+              constellation
+              art={chapter.art}
+              chapterId={chapterId}
+              motion={motion && !activeMemory}
+              viewed={viewed}
+            />
+            {memories.map((memory, index) => (
               <button
-                key={chapter.id}
-                aria-disabled={transitioning}
-                onClick={() => changeChapter(index)}
+                key={memory.id}
+                data-memory-index={index}
+                data-sound="open"
+                className={`memory-star ${viewed.includes(memory.id) ? "is-viewed" : ""}`}
+                style={{
+                  left: `${(chapter.art.nodes[chapter.art.memoryNodes[index]][0] / 600) * 100}%`,
+                  top: `${(chapter.art.nodes[chapter.art.memoryNodes[index]][1] / 700) * 100}%`,
+                }}
+                onClick={() => openMemory(memory.id)}
+                aria-label={`Open memory ${memory.number}: ${memory.title}`}
               >
-                <StarIcon />
-                <span>YEAR {chapter.year}</span>
-                <strong>
-                  {`${chapter.name} · ${chapter.heading} ${chapter.accent}`}
-                </strong>
-                <small>
-                  {index === 0
-                    ? `Explore ${chapter.memories.length} memories →`
-                    : `Explore ${chapter.memories.length} waiting stars →`}
-                </small>
+                <span className="star-focus-ring" />
+                <span className="star-label">
+                  <span>{memory.number}</span>
+                  {memory.title}
+                </span>
               </button>
             ))}
           </div>
         </section>
-      ) : (
-        <>
-          <aside className="chapter-intro">
-            <button
-              data-sound="back"
-              className="back-button"
-              onClick={() => {
-                if (!transitionLock.current) setOverview(true);
-              }}
+
+        <aside className="memory-index" aria-label="Memory list">
+          <p className="eyebrow">THE STARS WE KEEP</p>
+          <h2>Six moments to remember.</h2>
+          <div className="memory-list">
+            <svg
+              className="memory-list-arc"
+              viewBox="0 0 300 504"
+              preserveAspectRatio="none"
+              aria-hidden="true"
             >
-              ← <span>Our universe</span>
-            </button>
-            <div className="chapter-heading">
-              <p className="eyebrow">
-                YEAR {chapter.year} · {chapter.name.toUpperCase()}
-              </p>
-              <h1>
-                {chapter.heading}
-                <br />
-                <em>{chapter.accent}</em>
-              </h1>
-              <div className="chapter-rule">
-                <span />✧<span />
-              </div>
-              <p className="chapter-description">{chapter.quote}</p>
-              <span className="year-label">
-                YEAR {chapter.year} <span>·</span> {chapter.name.toUpperCase()}
-              </span>
-            </div>
-            <div className="chapter-progress">
-              <p>
-                <span>{String(viewed.length).padStart(2, "0")}</span> /{" "}
-                {String(memories.length).padStart(2, "0")}{" "}
-                <small>MEMORIES ILLUMINATED</small>
-              </p>
-              <div className="progress-track">
-                <span
-                  style={{
-                    width: `${(viewed.length / memories.length) * 100}%`,
-                  }}
-                />
-              </div>
-              <p className="progress-caption" aria-live="polite">
-                {viewed.length === memories.length
-                  ? `Our ${chapter.name} constellation, shining together.`
-                  : "A little brighter with every memory."}
-              </p>
-            </div>
-          </aside>
-
-          <section
-            className="constellation-stage"
-            aria-label={`Year ${chapter.year} constellation`}
-          >
-            <div className="constellation-map">
-              <SpaceScene
-                constellation
-                art={chapter.art}
-                chapterId={chapterId}
-                motion={motion && !activeMemory}
-                viewed={viewed}
-              />
-              {memories.map((memory, index) => (
-                <button
-                  key={memory.id}
-                  data-memory-index={index}
-                  data-sound="open"
-                  className={`memory-star ${viewed.includes(memory.id) ? "is-viewed" : ""}`}
-                  style={{
-                    left: `${(chapter.art.nodes[chapter.art.memoryNodes[index]][0] / 600) * 100}%`,
-                    top: `${(chapter.art.nodes[chapter.art.memoryNodes[index]][1] / 700) * 100}%`,
-                  }}
-                  onClick={() => openMemory(memory.id)}
-                  aria-label={`Open memory ${memory.number}: ${memory.title}`}
-                >
-                  <span className="star-focus-ring" />
-                  <span className="star-label">
-                    <span>{memory.number}</span>
-                    {memory.title}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </section>
-
-          <aside className="memory-index" aria-label="Memory list">
-            <p className="eyebrow">THE STARS WE KEEP</p>
-            <h2>Six moments to remember.</h2>
-            <div className="memory-list">
-              <svg
-                className="memory-list-arc"
-                viewBox="0 0 300 504"
-                preserveAspectRatio="none"
-                aria-hidden="true"
+              <path d="M28 42 C94 152 94 352 28 462" />
+            </svg>
+            {memories.map((memory, index) => (
+              <button
+                key={memory.id}
+                className={
+                  viewed.includes(memory.id)
+                    ? "memory-row visited"
+                    : "memory-row"
+                }
+                onClick={() => openMemory(memory.id)}
+                aria-label={`Memory ${memory.number}: ${chapter.emblems[index]}. ${viewed.includes(memory.id) ? "Illuminated; revisit memory" : "Open memory"}`}
+                data-sound="open"
               >
-                <path d="M28 42 C94 152 94 352 28 462" />
-              </svg>
-              {memories.map((memory, index) => (
-                <button
-                  key={memory.id}
-                  className={
-                    viewed.includes(memory.id)
-                      ? "memory-row visited"
-                      : "memory-row"
-                  }
-                  onClick={() => openMemory(memory.id)}
-                  aria-label={`Memory ${memory.number}: ${chapter.emblems[index]}. ${viewed.includes(memory.id) ? "Illuminated; revisit memory" : "Open memory"}`}
-                  data-sound="open"
-                >
-                  <span className="memory-medallion">
-                    <MemoryEmblem index={index} chapter={chapter.id} />
-                  </span>
-                  <span className="memory-row-copy">
-                    <strong>{chapter.emblems[index]}</strong>
-                  </span>
-                </button>
-              ))}
-            </div>
-          </aside>
-        </>
-      )}
+                <span className="memory-medallion">
+                  <MemoryEmblem index={index} chapter={chapter.id} />
+                </span>
+              </button>
+            ))}
+          </div>
+        </aside>
+      </>
 
       {notice && (
         <p className="browser-notice" role="status">
@@ -331,7 +255,8 @@ export function ConstellationExperience() {
           key={activeMemory.id}
           memory={activeMemory}
           year={chapter.year}
-          placeholderOnly={chapterId !== "year-1"}
+          region={chapter.region}
+          jadeTint={chapter.id === "year-4"}
           total={memories.length}
           onClose={closeMemory}
           onNext={() => moveMemory(1)}
